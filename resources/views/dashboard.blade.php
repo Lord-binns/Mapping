@@ -600,6 +600,24 @@
             tagStatusEl.textContent = 'All saved tags cleared.';
         }
 
+        function ensureUserMarker(position) {
+            if (userMarker) {
+                userMarker.setLatLng(position);
+                return;
+            }
+
+            userMarker = L.marker(position, { draggable: true }).addTo(map);
+            userMarker.on('dragstart', () => {
+                if (watchId !== null) {
+                    stopTracking();
+                }
+            });
+            userMarker.on('dragend', (event) => {
+                const draggedLatLng = event.target.getLatLng();
+                updatePositionFromMarker(draggedLatLng.lat, draggedLatLng.lng);
+            });
+        }
+
         function highlightCity(cityKey) {
             cityLayer.clearLayers();
 
@@ -620,12 +638,20 @@
 
             L.marker(city.center).addTo(cityLayer).bindPopup(`${city.label} highlighted`).openPopup();
 
+            if (watchId !== null) {
+                stopTracking();
+            }
+
+            ensureUserMarker(city.center);
+            updatePositionFromMarker(city.center[0], city.center[1]);
+            userMarker.bindPopup(`${city.label} selected`).openPopup();
+
             map.flyTo(city.center, city.zoom, {
                 animate: true,
                 duration: 0.8,
             });
 
-            cityStatusEl.textContent = `${city.label} is highlighted on the map.`;
+            cityStatusEl.textContent = `${city.label} is highlighted, and locator pin moved there.`;
         }
 
         function refreshMapSize() {
@@ -657,20 +683,7 @@
             const safeAccuracy = Math.max(accuracy || 0, 10);
             currentPosition = { lat, lng };
 
-            if (userMarker) {
-                userMarker.setLatLng(position);
-            } else {
-                userMarker = L.marker(position, { draggable: true }).addTo(map);
-                userMarker.on('dragstart', () => {
-                    if (watchId !== null) {
-                        stopTracking();
-                    }
-                });
-                userMarker.on('dragend', (event) => {
-                    const draggedLatLng = event.target.getLatLng();
-                    updatePositionFromMarker(draggedLatLng.lat, draggedLatLng.lng);
-                });
-            }
+            ensureUserMarker(position);
 
             if (accuracyCircle) {
                 accuracyCircle.setLatLng(position);
