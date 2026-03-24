@@ -84,20 +84,21 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            font-size: 13px;
+            font-size: 15px;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            padding: 10px 12px;
+            padding: 12px 15px;
             border-radius: 999px;
             border: 1px solid transparent;
         }
 
         .nav-link svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             stroke-width: 2;
             stroke: currentColor;
+            color: #0b6d5a;
             flex-shrink: 0;
         }
 
@@ -193,11 +194,29 @@
             z-index: 1;
         }
 
+        .globe-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 40px;
+        }
+
         .globe-wrapper {
             margin-top: 3vh;
             position: relative;
             width: min(92vw, 700px);
             height: min(92vw, 700px);
+        }
+
+        .globe-label {
+            margin: 0;
+            font-family: sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #0b6d5a;
+            font-size: clamp(12px, 1.2vw, 14px);
+            font-weight: 400;
         }
 
         .info {
@@ -230,7 +249,8 @@
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         }
 
-        svg {
+        #map,
+        #country {
             position: fixed;
             top: 0;
             visibility: hidden;
@@ -386,13 +406,36 @@
         }
 
         .carousel-container {
-            width: 100%;
-            height: 100vh;
+            width: min(1250px, 96vw);
+            aspect-ratio: 16 / 9;
+            max-height: 620px;
             display: grid;
             place-items: center;
             overflow: hidden;
             background: #f4f4f4;
             position: relative;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+        }
+
+        .carousel-floating-title {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 6;
+            margin: 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(236, 255, 251, 0.92);
+            border: 1px solid rgba(11, 109, 90, 0.35);
+            color: #0b6d5a;
+            font-size: clamp(13px, 1.3vw, 18px);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 900;
+            font-family: 'Arial Black', sans-serif;
+            backdrop-filter: blur(3px);
+            text-shadow: none;
         }
 
         .blank-middle-section {
@@ -422,6 +465,7 @@
             z-index: 1;
             background-position: center;
             background-size: cover;
+            background-repeat: no-repeat;
             border-radius: 20px;
             box-shadow: 0 20px 30px rgba(255, 255, 255, 0.3) inset;
             transition: transform 0.1s, left 0.75s, top 0.75s, width 0.75s, height 0.75s;
@@ -434,6 +478,7 @@
             width: 100%;
             height: 100%;
             transform: none;
+            background-size: cover;
             border-radius: 0;
             box-shadow: none;
             opacity: 1;
@@ -535,7 +580,9 @@
 
         @media (max-width: 900px) {
             .carousel-container {
-                height: 80vh;
+                width: min(94vw, 860px);
+                aspect-ratio: 4 / 3;
+                max-height: 560px;
             }
             .slider .item {
                 width: 160px;
@@ -555,7 +602,14 @@
 
         @media (max-width: 650px) {
             .carousel-container {
-                height: 70vh;
+                width: 94vw;
+                aspect-ratio: 3 / 4;
+                max-height: 520px;
+            }
+            .carousel-floating-title {
+                top: 12px;
+                left: 12px;
+                padding: 8px 10px;
             }
             .carousel-content {
                 width: min(20vw, 300px);
@@ -589,10 +643,7 @@
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7.5" r="3" stroke="currentColor"/><path d="M5 20c.7-3.1 3.4-5 7-5s6.3 1.9 7 5" stroke="currentColor" stroke-linecap="round"/></svg>
                 About Us
             </a>
-            <a class="nav-link" href="#features">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-linecap="round"/></svg>
-                Features
-            </a>
+      
             <a class="nav-link" href="#contact">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16v12H4z" stroke="currentColor"/><path d="M4 8l8 5 8-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Contact
@@ -623,9 +674,12 @@
 
     <main class="main-content">
         <div class="page" id="home">
-            <div class="globe-wrapper">
-                <canvas id="globe-3d"></canvas>
-                <div class="info"><span></span></div>
+            <div class="globe-section">
+                <div class="globe-wrapper">
+                    <canvas id="globe-3d"></canvas>
+                    <div class="info"><span></span></div>
+                </div>
+                <p class="globe-label"> "Earth" Our one and only home</p>
             </div>
         </div>
 {{--  
@@ -635,47 +689,48 @@
         </section>  --}}
 
         <div class="carousel-container">
+            <h3 class="carousel-floating-title">Checkout Our Mapping Features</h3>
             <ul class="slider" id="carousel-slider">
                 <li class="item" style="background-image: url('https://i.pinimg.com/736x/6f/88/bc/6f88bc51f7005f59f998333655a803cd.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Flood Monitoring</h2>
-                        <p class="carousel-description">Real-time flood detection and early warning systems help communities prepare for natural disasters and minimize impact on vulnerable areas.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">Environmental Incident Reports</h2>
+                        <p class="carousel-description">Map user-submitted incident pins with exact location, photo proof, report description, and status tracking from pending to verified and resolved.</p>
+                        <button>View Reports</button>
                     </div>
                 </li>
-                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/9d/ae/65/9dae657348b13d1e2156a2142dca954e.jpg')">
+                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/df/89/59/df89596c5813b20149c522d2d3c2f188.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Waste Hotspots</h2>
-                        <p class="carousel-description">Identify and track illegal dumping sites with satellite imagery and machine learning to improve cleanup operations and protect the environment.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">Illegal Dumping Sites</h2>
+                        <p class="carousel-description">Track trash piles and open dumping areas reported by the community to support verification workflows and faster cleanup response planning.</p>
+                        <button>Open Layer</button>
                     </div>
                 </li>
-                <li class="item" style="background-image: url('https://i.pinimg.com/736x/d4/82/e1/d482e150a3741faad395b611592c53ea.jpg')">
+                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/0f/fb/bf/0ffbbf4ab64ce4dac09beaddfdd01c4d.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Water Quality Watch</h2>
-                        <p class="carousel-description">Monitor water contamination levels across regions with real-time alerts to ensure safe water supply and aquatic ecosystem health.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">Flood-Prone Areas</h2>
+                        <p class="carousel-description">Collect and visualize streets or zones that repeatedly flood during rain events so responders can identify high-risk corridors and vulnerable communities.</p>
+                        <button>Open Layer</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/1200x/72/bd/7c/72bd7c0c8b7913e9da860c152a480268.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Air Quality Index</h2>
-                        <p class="carousel-description">Track air pollution patterns and provide actionable insights to reduce emissions and improve public health outcomes in urban areas.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">Water Condition Mapping</h2>
+                        <p class="carousel-description">Tag rivers, springs, and drainage points as clean or polluted using field reports and evidence photos to support environmental health monitoring.</p>
+                        <button>Open Layer</button>
                     </div>
                 </li>
-                <li class="item" style="background-image: url('https://i.pinimg.com/736x/d4/82/e1/d482e150a3741faad395b611592c53ea.jpg')">
+                <li class="item" style="background-image: url('https://i.pinimg.com/736x/55/01/92/550192bed01ffeb8805a77650941be82.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Forest Coverage</h2>
-                        <p class="carousel-description">Monitor deforestation rates and track reforestation efforts to promote sustainable forest management and biodiversity conservation.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">Hotspot Heatmap Analysis</h2>
+                        <p class="carousel-description">Convert clustered reports into heatmap surfaces so dense incident zones become visible at a glance instead of isolated point markers.</p>
+                        <button>View Heatmap</button>
                     </div>
                 </li>
-                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/79/99/0f/79990f6daab114b9ef2b37b25b797080.jpg')">
+                <li class="item" style="background-image: url('https://i.pinimg.com/736x/18/a4/59/18a4599cb9b39e9912d87ece87d8eb44.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Climate Resilience</h2>
-                        <p class="carousel-description">Build adaptive capacity and reduce climate change impacts through data-driven planning and community-focused resilience initiatives.</p>
-                        <button>Learn More</button>
+                        <h2 class="carousel-title">High-Risk Zone Clusters</h2>
+                        <p class="carousel-description">Highlight red zones for heavy dumping and blue zones for flood-prone clusters to reveal environmental patterns and prioritize interventions.</p>
+                        <button>View Risk Zones</button>
                     </div>
                 </li>
             </ul>
