@@ -16,7 +16,7 @@
         }
 
         .main-content {
-            padding-top: 94px;
+            padding-top: 120px;
             padding-bottom: 24px;
         }
 
@@ -25,32 +25,56 @@
             top: 0;
             left: 0;
             right: 0;
-            min-height: 74px;
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom: 1px solid #d9d9d9;
+            min-height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 3px solid #00c9a2;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding: 10px 18px;
+            padding: 16px 24px;
             z-index: 20;
             backdrop-filter: blur(6px);
         }
 
         .brand {
-            font-weight: 700;
+            font-weight: 900;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            color: #111;
-            font-size: 14px;
+            color: #0b6d5a;
+            font-size: 28px;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00c9a2 0%, #0b6d5a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .main-nav {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
         }
 
@@ -59,20 +83,22 @@
             color: #1c1c1c;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
+            gap: 7px;
+            font-size: 13px;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            padding: 9px 10px;
+            padding: 10px 12px;
             border-radius: 999px;
             border: 1px solid transparent;
         }
 
         .nav-link svg {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             stroke-width: 2;
+            stroke: currentColor;
+            flex-shrink: 0;
         }
 
         .nav-link:hover {
@@ -100,8 +126,8 @@
             background: #ffffff;
             color: #222;
             border-radius: 999px;
-            padding: 8px 12px;
-            font-size: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -141,8 +167,8 @@
             background: #ffffff;
             color: #222;
             border-radius: 999px;
-            padding: 7px 12px;
-            font-size: 11px;
+            padding: 8px 13px;
+            font-size: 12px;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -162,6 +188,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-bottom: 64px;
             position: relative;
             z-index: 1;
         }
@@ -317,10 +344,10 @@
         @media (max-width: 900px) {
             .navbar {
                 height: auto;
-                min-height: 74px;
+                min-height: 100px;
                 flex-direction: column;
                 align-items: stretch;
-                padding: 10px 12px;
+                padding: 16px 12px;
                 gap: 8px;
             }
 
@@ -350,18 +377,209 @@
             }
 
             .main-content {
-                padding-top: 112px;
+                padding-top: 140px;
             }
 
             .insight-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        .carousel-container {
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #f4f4f4;
+            position: relative;
+        }
+
+        .blank-middle-section {
+            width: min(1100px, 92vw);
+            min-height: 220px;
+            margin: 22px auto;
+            background: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 14px;
+        }
+
+        .slider {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider .item {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            background-position: center;
+            background-size: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 30px rgba(255, 255, 255, 0.3) inset;
+            transition: transform 0.1s, left 0.75s, top 0.75s, width 0.75s, height 0.75s;
+        }
+
+        .slider .item:nth-child(1),
+        .slider .item:nth-child(2) {
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transform: none;
+            border-radius: 0;
+            box-shadow: none;
+            opacity: 1;
+        }
+
+        .slider .item:nth-child(3) { left: 50%; }
+        .slider .item:nth-child(4) { left: calc(50% + 220px); }
+        .slider .item:nth-child(5) { left: calc(50% + 440px); }
+        .slider .item:nth-child(6) { left: calc(50% + 660px); opacity: 0; }
+
+        .carousel-content {
+            width: min(30vw, 400px);
+            position: absolute;
+            top: 50%;
+            left: 3rem;
+            transform: translateY(-50%);
+            font: 400 0.85rem helvetica, sans-serif;
+            color: white;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            display: none;
+        }
+
+        .carousel-content .carousel-title {
+            font-family: 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            margin: 0 0 1rem 0;
+            font-size: 1.4rem;
+        }
+
+        .carousel-content .carousel-description {
+            line-height: 1.7;
+            margin: 1rem 0 1.5rem 0;
+            font-size: 0.8rem;
+        }
+
+        .carousel-content button {
+            width: fit-content;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: white;
+            border: 2px solid white;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .carousel-content button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .slider .item:nth-of-type(2) .carousel-content {
+            display: block;
+            animation: carousel-show 0.75s ease-in-out 0.3s forwards;
+        }
+
+        @keyframes carousel-show {
+            0% {
+                filter: blur(5px);
+                transform: translateY(calc(-50% + 75px));
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .carousel-nav {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            user-select: none;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .carousel-nav .carousel-btn {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 0, 0, 0.6);
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+
+        .carousel-nav .carousel-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 900px) {
+            .carousel-container {
+                height: 80vh;
+            }
+            .slider .item {
+                width: 160px;
+                height: 270px;
+            }
+            .slider .item:nth-child(3) { left: 50%; }
+            .slider .item:nth-child(4) { left: calc(50% + 170px); }
+            .slider .item:nth-child(5) { left: calc(50% + 340px); }
+            .slider .item:nth-child(6) { left: calc(50% + 510px); opacity: 0; }
+            .carousel-content {
+                width: min(25vw, 350px);
+            }
+            .carousel-content .carousel-title { font-size: 1rem; }
+            .carousel-content .carousel-description { font-size: 0.7rem; }
+            .carousel-content button { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 650px) {
+            .carousel-container {
+                height: 70vh;
+            }
+            .carousel-content {
+                width: min(20vw, 300px);
+            }
+            .carousel-content .carousel-title { font-size: 0.9rem; }
+            .carousel-content .carousel-description { font-size: 0.65rem; }
+            .carousel-content button { font-size: 0.7rem; }
+            .slider .item {
+                width: 130px;
+                height: 220px;
+            }
+            .slider .item:nth-child(3) { left: 50%; }
+            .slider .item:nth-child(4) { left: calc(50% + 140px); }
+            .slider .item:nth-child(5) { left: calc(50% + 280px); }
+            .slider .item:nth-child(6) { left: calc(50% + 420px); opacity: 0; }
+        }
     </style>
 </head>
 <body data-page="globe-map">
     <header class="navbar">
-        <div class="brand">Clean Earth Interactive Mapping</div>
+        <div class="brand">
+            <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
+            <span>Clean Earth Interactive Mapping</span>
+        </div>
         <nav class="main-nav" aria-label="Main navigation">
             <a class="nav-link" href="#home">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -380,7 +598,7 @@
                 Contact
             </a>
 
-            <div class="nav-item-controls">
+            {{--  <div class="nav-item-controls">
                 <button type="button" class="controls-trigger">Controls</button>
                 <div class="controls-dropdown" id="top-controls" aria-label="Country shortcuts">
                     <button type="button" data-country="Philippines" class="is-active">Philippines</button>
@@ -390,7 +608,7 @@
                     <button type="button" data-country="India">India</button>
                     <button type="button" data-country="Japan">Japan</button>
                 </div>
-            </div>
+            </div>  --}}
 
             <a class="nav-link nav-auth" href="{{ route('login') }}">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 17l5-5-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke="currentColor" stroke-linecap="round"/><path d="M21 4v16" stroke="currentColor" stroke-linecap="round"/></svg>
@@ -410,52 +628,88 @@
                 <div class="info"><span></span></div>
             </div>
         </div>
+{{--  
+        <section class="blank-middle-section" aria-label="Blank spacer section">
+        
+        
+        </section>  --}}
 
-        <section class="section-lite" id="about">
-            <h2>About Us</h2>
-            <p>
-                Clean Earth Interactive Mapping is a visual monitoring platform that helps communities, responders, and local agencies understand environmental activity at a glance.
-            </p>
-        </section>
+        <div class="carousel-container">
+            <ul class="slider" id="carousel-slider">
+                <li class="item" style="background-image: url('https://i.pinimg.com/736x/6f/88/bc/6f88bc51f7005f59f998333655a803cd.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Flood Monitoring</h2>
+                        <p class="carousel-description">Real-time flood detection and early warning systems help communities prepare for natural disasters and minimize impact on vulnerable areas.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/9d/ae/65/9dae657348b13d1e2156a2142dca954e.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Waste Hotspots</h2>
+                        <p class="carousel-description">Identify and track illegal dumping sites with satellite imagery and machine learning to improve cleanup operations and protect the environment.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+                <li class="item" style="background-image: url('https://i.pinimg.com/736x/d4/82/e1/d482e150a3741faad395b611592c53ea.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Water Quality Watch</h2>
+                        <p class="carousel-description">Monitor water contamination levels across regions with real-time alerts to ensure safe water supply and aquatic ecosystem health.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/72/bd/7c/72bd7c0c8b7913e9da860c152a480268.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Air Quality Index</h2>
+                        <p class="carousel-description">Track air pollution patterns and provide actionable insights to reduce emissions and improve public health outcomes in urban areas.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+                <li class="item" style="background-image: url('https://i.pinimg.com/736x/d4/82/e1/d482e150a3741faad395b611592c53ea.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Forest Coverage</h2>
+                        <p class="carousel-description">Monitor deforestation rates and track reforestation efforts to promote sustainable forest management and biodiversity conservation.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+                <li class="item" style="background-image: url('https://i.pinimg.com/1200x/79/99/0f/79990f6daab114b9ef2b37b25b797080.jpg')">
+                    <div class="carousel-content">
+                        <h2 class="carousel-title">Climate Resilience</h2>
+                        <p class="carousel-description">Build adaptive capacity and reduce climate change impacts through data-driven planning and community-focused resilience initiatives.</p>
+                        <button>Learn More</button>
+                    </div>
+                </li>
+            </ul>
+            <nav class="carousel-nav">
+                <button class="carousel-btn prev" aria-label="Previous slide">❮</button>
+                <button class="carousel-btn next" aria-label="Next slide">❯</button>
+            </nav>
+        </div>
 
-        <section class="new-section" id="features">
-            <h2>Live Environmental Intelligence</h2>
-            <p>
-                This section highlights how Clean Earth Interactive Mapping supports proactive monitoring and faster response across different regions.
-            </p>
-            <div class="insight-grid">
-                <article class="insight-card">
-                    <h3>Flood Monitoring</h3>
-                    <p>
-                        Track flood-prone zones in near real-time and surface high-risk locations for rapid emergency coordination.
-                    </p>
-                </article>
-                <article class="insight-card">
-                    <h3>Waste Hotspots</h3>
-                    <p>
-                        Identify illegal dumping clusters and recurring waste incidents to improve route planning and cleanup operations.
-                    </p>
-                </article>
-                <article class="insight-card">
-                    <h3>Water Quality Watch</h3>
-                    <p>
-                        Monitor contamination alerts by region and prioritize inspections using map-based severity indicators.
-                    </p>
-                </article>
-            </div>
-        </section>
-
-        <section class="section-lite" id="contact">
-            <h2>Contact</h2>
-            <p>
-                Reach the mapping team for integrations, pilot deployments, or data partnerships to expand environmental monitoring coverage.
-            </p>
-        </section>
+        
     </main>
 
     <footer class="footer">Clean Earth Interactive Mapping</footer>
 
     <svg id="map" viewBox="0 0 1010 666"></svg>
     <svg id="country" viewBox="0 0 1010 666"></svg>
+
+    <script>
+        const slider = document.getElementById('carousel-slider');
+        const carouselBtns = document.querySelectorAll('.carousel-btn');
+
+        function activateCarousel(e) {
+            const items = document.querySelectorAll('.slider .item');
+            if (e.target.matches('.next')) {
+                slider.appendChild(items[0]);
+            }
+            if (e.target.matches('.prev')) {
+                slider.insertBefore(items[items.length - 1], items[0]);
+            }
+        }
+
+        carouselBtns.forEach(btn => {
+            btn.addEventListener('click', activateCarousel);
+        });
+    </script>
 </body>
 </html>
