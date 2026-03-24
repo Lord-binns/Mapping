@@ -127,7 +127,7 @@
     </style>
 </head>
 <body>
-    <form id="msform" action="#" method="get">
+    <form id="msform" action="{{ route('dashboard') }}" method="get">
         <fieldset>
             <h2 class="fs-title">Login</h2>
             <h3 class="fs-subtitle">Access your Clean Earth Interactive Mapping dashboard</h3>
