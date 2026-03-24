@@ -487,17 +487,23 @@
         const cityPresets = {
             'manolo-fortich': {
                 label: 'Manolo Fortich',
+                osmId: 13452750,
+                osmType: 'relation',
                 center: [8.3698, 124.8645],
                 zoom: 12,
                 radius: 4500,
             },
             'cagayan-de-oro': {
                 label: 'Cagayan de Oro City',
+                osmId: 2387482,
+                osmType: 'relation',
                 center: [8.4542, 124.6319],
                 zoom: 12,
                 radius: 7000,
             },
         };
+
+        const cityBoundaryCache = new Map();
 
         function getTagStyle(tagType) {
             const styleMap = {
@@ -600,10 +606,16 @@
             tagStatusEl.textContent = 'All saved tags cleared.';
         }
 
-        function ensureUserMarker(position) {
-            if (userMarker) {
+        function ensureUserMarker(position, forceRecreate = false) {
+            if (userMarker && !forceRecreate) {
                 userMarker.setLatLng(position);
                 return;
+            }
+
+            // Remove old marker if forcing recreation
+            if (userMarker) {
+                map.removeLayer(userMarker);
+                userMarker = null;
             }
 
             userMarker = L.marker(position, { draggable: true }).addTo(map);
@@ -618,7 +630,43 @@
             });
         }
 
-        function highlightCity(cityKey) {
+        async function fetchCityBoundary(cityKey) {
+            if (cityBoundaryCache.has(cityKey)) {
+                return cityBoundaryCache.get(cityKey);
+            }
+
+            const city = cityPresets[cityKey];
+            if (!city?.osmId) {
+                return null;
+            }
+
+            const osmIdString = `R${city.osmId}`;
+            const endpoint = `https://nominatim.openstreetmap.org/lookup?osm_ids=${osmIdString}&format=json&polygon_geojson=1`;
+            try {
+                const response = await fetch(endpoint, {
+                    headers: {
+                        Accept: 'application/json',
+                        'User-Agent': 'CapsLocalDev/1.0',
+                    },
+                });
+
+                if (!response.ok) {
+                    console.error(`Boundary lookup failed for OSM R${city.osmId}:`, response.status);
+                    return null;
+                }
+
+                const result = await response.json();
+                const resultArray = Array.isArray(result) ? result : [result];
+                const boundary = resultArray[0]?.geojson || null;
+                cityBoundaryCache.set(cityKey, boundary);
+                return boundary;
+            } catch (err) {
+                console.error(`Error fetching boundary for ${cityKey}:`, err);
+                return null;
+            }
+        }
+
+        async function highlightCity(cityKey) {
             cityLayer.clearLayers();
 
             if (!cityKey || !cityPresets[cityKey]) {
@@ -627,31 +675,63 @@
             }
 
             const city = cityPresets[cityKey];
+            cityStatusEl.textContent = `Loading ${city.label} boundary...`;
 
-            L.circle(city.center, {
-                radius: city.radius,
-                color: '#0b6d5a',
-                fillColor: '#00c9a2',
-                fillOpacity: 0.2,
-                weight: 2,
-            }).addTo(cityLayer);
+            let boundaryLoaded = false;
+            try {
+                const boundaryGeoJson = await fetchCityBoundary(cityKey);
+                if (boundaryGeoJson) {
+                    const boundaryLayer = L.geoJSON(boundaryGeoJson, {
+                        style: {
+                            color: '#0b6d5a',
+                            fillColor: '#00c9a2',
+                            fillOpacity: 0.18,
+                            weight: 2,
+                        },
+                    }).addTo(cityLayer);
 
-            L.marker(city.center).addTo(cityLayer).bindPopup(`${city.label} highlighted`).openPopup();
+                    const bounds = boundaryLayer.getBounds();
+                    if (bounds.isValid()) {
+                        if (watchId !== null) {
+                            stopTracking();
+                        }
+                        cityStatusEl.textContent = `✓ ${city.label} boundary highlighted. Locator remains draggable at current position.`;
 
-            if (watchId !== null) {
-                stopTracking();
+                        map.fitBounds(bounds, {
+                            padding: [20, 20],
+                            animate: true,
+                        });
+
+                        boundaryLoaded = true;
+                    }
+                }
+            } catch {
+                boundaryLoaded = false;
             }
 
-            ensureUserMarker(city.center);
-            updatePositionFromMarker(city.center[0], city.center[1]);
-            userMarker.bindPopup(`${city.label} selected`).openPopup();
+            if (!boundaryLoaded) {
+                L.circle(city.center, {
+                    radius: city.radius,
+                    color: '#0b6d5a',
+                    fillColor: '#00c9a2',
+                    fillOpacity: 0.2,
+                    weight: 2,
+                }).addTo(cityLayer);
 
-            map.flyTo(city.center, city.zoom, {
-                animate: true,
-                duration: 0.8,
-            });
+                if (watchId !== null) {
+                    stopTracking();
+                }
+                
+                map.flyTo(city.center, city.zoom, {
+                    animate: true,
+                    duration: 0.8,
+                });
 
-            cityStatusEl.textContent = `${city.label} is highlighted, and locator pin moved there.`;
+                cityStatusEl.textContent = `${city.label} approximate highlight shown. Locator remains draggable at current position.`;
+                return;
+            }
+
+            cityStatusEl.textContent = `${city.label} boundary highlighted. Locator remains draggable at current position.`;
         }
 
         function refreshMapSize() {
@@ -747,8 +827,8 @@
         trackBtn.addEventListener('click', startTracking);
         addTagBtn.addEventListener('click', createLocationTag);
         clearTagsBtn.addEventListener('click', clearLocationTags);
-        citySelectEl.addEventListener('change', () => {
-            highlightCity(citySelectEl.value);
+        citySelectEl.addEventListener('change', async () => {
+            await highlightCity(citySelectEl.value);
         });
 
         loadSavedTags();
