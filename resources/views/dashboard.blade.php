@@ -147,13 +147,16 @@
         .sidebar {
             background: #ffffff;
             border: 1px solid #d9ebe6;
-            border-radius: 14px;
-            box-shadow: 0 10px 20px rgba(0, 121, 101, 0.08);
-            padding: 12px;
-            display: grid;
+            border-radius: 18px;
+            box-shadow: 0 16px 30px rgba(0, 121, 101, 0.1);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
             position: sticky;
             top: 102px;
+            min-height: calc(100vh - 132px);
+            color: #1f2b28;
         }
 
         .sidebar-title {
@@ -165,11 +168,47 @@
             padding: 4px 2px;
         }
 
+        .sidebar-title.with-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-title.with-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: #0b6d5a;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
         .sidebar .nav-link,
         .sidebar .btn {
             justify-content: flex-start;
             width: 100%;
             box-sizing: border-box;
+        }
+
+        .sidebar .nav-link {
+            color: #1f2b28;
+            border: 1px solid #dbeee8;
+            border-radius: 10px;
+            padding: 10px 12px;
+            text-transform: none;
+            letter-spacing: 0.02em;
+            font-size: 14px;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            background: #f8fffc;
+        }
+
+        .sidebar .nav-link svg {
+            color: #0b6d5a;
+        }
+
+        .sidebar .nav-link:hover {
+            background: #ecfffb;
+            border-color: #9bdcca;
+            color: #0b6d5a;
         }
 
         .report-panel {
@@ -196,6 +235,20 @@
             color: #55706a;
         }
 
+        .panel-label.with-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-label.with-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: #0b6d5a;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
         .field,
         .field-input {
             width: 100%;
@@ -208,11 +261,63 @@
             color: #1f2b28;
         }
 
+        .field {
+            border: 1px solid #dbeee8;
+            background: #f8fffc;
+            padding: 10px 12px;
+            font-size: 14px;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #0b6d5a 50%),
+                linear-gradient(135deg, #0b6d5a 50%, transparent 50%);
+            background-position:
+                calc(100% - 16px) calc(50% - 2px),
+                calc(100% - 10px) calc(50% - 2px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 34px;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .field:hover {
+            background-color: #ecfffb;
+            border-color: #9bdcca;
+            color: #0b6d5a;
+        }
+
+        .select-with-icon {
+            position: relative;
+        }
+
+        .select-with-icon .select-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            stroke: #0b6d5a;
+            stroke-width: 2;
+            fill: none;
+            pointer-events: none;
+        }
+
+        .select-with-icon .field {
+            padding-left: 34px;
+        }
+
         .field:focus,
         .field-input:focus {
             outline: none;
             border-color: #00c9a2;
             box-shadow: 0 0 0 3px rgba(0, 201, 162, 0.12);
+        }
+
+        .field option {
+            background: #ffffff;
+            color: #1f2b28;
         }
 
         .report-actions {
@@ -225,6 +330,84 @@
             font-size: 12px;
             color: #55706a;
             line-height: 1.4;
+        }
+
+        .tag-popup-remove {
+            margin-top: 8px;
+            border: 1px solid #8edac9;
+            background: #ffffff;
+            color: #0b6d5a;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .tag-popup-remove:hover {
+            background: #ecfffb;
+        }
+
+        .sidebar .btn {
+            border: 1px solid #00c9a2;
+            background: #00c9a2;
+            color: #ffffff;
+            border-radius: 10px;
+            text-transform: none;
+            letter-spacing: 0.02em;
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+
+        .sidebar .btn:hover {
+            filter: brightness(0.96);
+        }
+
+        .sidebar .btn.alt {
+            background: #ffffff;
+            color: #0b6d5a;
+            border-color: #8edac9;
+        }
+
+        .sidebar .btn.alt:hover {
+            background: #ecfffb;
+            color: #0b6d5a;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #e2f1ed;
+        }
+
+        .sidebar-logout {
+            text-decoration: none;
+            width: 100%;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-start;
+            border: 1px solid #8edac9;
+            background: #ffffff;
+            color: #0b6d5a;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+        }
+
+        .sidebar-logout svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logout:hover {
+            background: #ecfffb;
+            color: #0b6d5a;
         }
 
         .tag-pin {
@@ -349,6 +532,18 @@
             letter-spacing: 0.04em;
             text-decoration: none;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
         }
 
         .btn.alt {
@@ -375,6 +570,7 @@
 
             .sidebar {
                 position: static;
+                min-height: 0;
             }
 
             #map {
@@ -396,44 +592,63 @@
         <div class="dashboard-shell">
             <div class="dashboard-layout">
                 <aside class="sidebar" aria-label="Dashboard sidebar">
-                    <p class="sidebar-title">Navigation</p>
-                    <a class="nav-link" href="{{ url('/') }}">
+                    <p class="sidebar-title with-icon">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 17h16" stroke-linecap="round"/></svg>
+                        Menu
+                    </p>
+                    <a class="nav-link" href="{{ route('dashboard') }}">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         Home
                     </a>
-                    <a class="nav-link nav-auth" href="{{ route('login') }}">
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 17l5-5-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke="currentColor" stroke-linecap="round"/><path d="M21 4v16" stroke="currentColor" stroke-linecap="round"/></svg>
-                        Login
-                    </a>
-                    <button id="track-location-btn" class="btn" type="button">Track My Location</button>
+                    <button id="track-location-btn" class="btn" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4" stroke-linecap="round"/><path d="M12 17v4" stroke-linecap="round"/><path d="M3 12h4" stroke-linecap="round"/><path d="M17 12h4" stroke-linecap="round"/><circle cx="12" cy="12" r="4"/></svg>
+                        Track
+                    </button>
 
                     <section class="city-panel" aria-label="City selector">
-                        <p class="panel-label">City Selector</p>
-                        <select id="city-select" class="field" aria-label="Select city">
-                            <option value="">Choose a city to highlight</option>
-                            <option value="manolo-fortich">Manolo Fortich</option>
-                            <option value="cagayan-de-oro">Cagayan de Oro City</option>
-                        </select>
-                        <p id="city-status" class="tag-help">Select a city to zoom and highlight.</p>
+                        <div class="select-with-icon">
+                            <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" stroke-linecap="round"/><path d="M5 8h6" stroke-linecap="round"/><path d="M5 16h6" stroke-linecap="round"/><path d="M12 6c2.8 0 7 1.3 7 4.5S14.8 15 12 15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <select id="city-select" class="field" aria-label="Select city">
+                                <option value="">Choose City</option>
+                                <option value="manolo-fortich">Manolo Fortich</option>
+                                <option value="cagayan-de-oro">Cagayan de Oro City</option>
+                            </select>
+                        </div>
                     </section>
 
                     <section class="report-panel" aria-label="Location tagging">
-                        <p class="panel-label">Leave a tag on your location</p>
-                        <select id="tag-type" class="field" aria-label="Tag type">
-                            <option value="High Risk">High Risk</option>
-                            <option value="Dumping Site">Dumping Site</option>
-                            <option value="Contaminated Water">Contaminated Water</option>
-                            <option value="Illegal Burning">Illegal Burning</option>
-                            <option value="Blocked Drainage">Blocked Drainage</option>
-                            <option value="Other">Other</option>
-                        </select>
+                        <div class="select-with-icon">
+                            <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5"/></svg>
+                            <select id="tag-type" class="field" aria-label="Tag type">
+                                <option value="">Tag Location</option>
+                                <option value="High Risk">High Risk</option>
+                                <option value="Dumping Site">Dumping Site</option>
+                                <option value="Contaminated Water">Contaminated Water</option>
+                                <option value="Illegal Burning">Illegal Burning</option>
+                                <option value="Blocked Drainage">Blocked Drainage</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                         <input id="tag-note" class="field-input" type="text" maxlength="90" placeholder="Optional note (ex: near creek entrance)">
                         <div class="report-actions">
-                            <button id="add-location-tag" class="btn" type="button">Add Tag Here</button>
-                            <button id="clear-location-tags" class="btn alt" type="button">Clear My Tags</button>
+                            <button id="add-location-tag" class="btn" type="button">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14" stroke-linecap="round"/><path d="M5 12h14" stroke-linecap="round"/></svg>
+                                Add Tag
+                            </button>
+                            <button id="toggle-satellite-mode" class="btn alt" type="button">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 19l2-4h4l2 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 9h6" stroke-linecap="round"/><path d="M8 12h8" stroke-linecap="round"/></svg>
+                                <span id="satellite-mode-label">Satellite: Off</span>
+                            </button>
                         </div>
-                        <p id="tag-status" class="tag-help">Set your location first, then drag the locator pin if needed and add a tag.</p>
+                        <p id="tag-status" class="tag-help">Drag the pin, then add a tag.</p>
                     </section>
+
+                    <div class="sidebar-footer">
+                        <a class="sidebar-logout" href="{{ url('/') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke-linecap="round"/><path d="M21 4v16" stroke-linecap="round"/></svg>
+                            Log Out
+                        </a>
+                    </div>
                 </aside>
 
                 <div class="content-stack">
@@ -466,21 +681,28 @@
         const tagTypeEl = document.getElementById('tag-type');
         const tagNoteEl = document.getElementById('tag-note');
         const addTagBtn = document.getElementById('add-location-tag');
-        const clearTagsBtn = document.getElementById('clear-location-tags');
+        const satelliteModeBtn = document.getElementById('toggle-satellite-mode');
+        const satelliteModeLabelEl = document.getElementById('satellite-mode-label');
         const tagStatusEl = document.getElementById('tag-status');
         const citySelectEl = document.getElementById('city-select');
         const cityStatusEl = document.getElementById('city-status');
         const savedTagsKey = 'dashboard-location-tags-v1';
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; OpenStreetMap contributors',
         }).addTo(map);
+
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles &copy; Esri',
+        });
 
         let userMarker = null;
         let accuracyCircle = null;
         let watchId = null;
         let currentPosition = null;
+        let isSatelliteMode = false;
         const tagLayer = L.layerGroup().addTo(map);
         const cityLayer = L.layerGroup().addTo(map);
 
@@ -504,6 +726,12 @@
         };
 
         const cityBoundaryCache = new Map();
+
+        function setCityStatus(message) {
+            if (cityStatusEl) {
+                cityStatusEl.textContent = message;
+            }
+        }
 
         function getTagStyle(tagType) {
             const styleMap = {
@@ -563,7 +791,36 @@
 
             const noteHtml = note ? `<br><strong>Note:</strong> ${note}` : '';
             const stamp = new Date(timestamp).toLocaleString();
-            marker.bindPopup(`<strong>${tagType}</strong>${noteHtml}<br><small>${stamp}</small>`);
+            marker.bindPopup(`
+                <strong>${tagType}</strong>${noteHtml}<br><small>${stamp}</small><br>
+                <button type="button" class="tag-popup-remove">Remove Tag</button>
+            `);
+
+            marker.on('popupopen', (event) => {
+                const popupEl = event.popup.getElement();
+                const removeBtn = popupEl?.querySelector('.tag-popup-remove');
+                if (!removeBtn) {
+                    return;
+                }
+
+                removeBtn.addEventListener('click', (clickEvent) => {
+                    clickEvent.preventDefault();
+                    clickEvent.stopPropagation();
+
+                    const confirmed = window.confirm('Are you sure you want to remove this tag?');
+                    if (!confirmed) {
+                        tagStatusEl.textContent = 'Tag removal cancelled.';
+                        return;
+                    }
+
+                    const removedType = marker?.options?.meta?.tagType || 'Tag';
+                    tagLayer.removeLayer(marker);
+                    saveTags();
+                    tagStatusEl.textContent = `${removedType} tag removed.`;
+                    map.closePopup();
+                }, { once: true });
+            });
+
             return marker;
         }
 
@@ -593,6 +850,11 @@
             const selectedType = tagTypeEl.value;
             const noteValue = tagNoteEl.value.trim();
 
+            if (!selectedType) {
+                tagStatusEl.textContent = 'Select a tag type first.';
+                return;
+            }
+
             addTagMarker(currentPosition.lat, currentPosition.lng, selectedType, noteValue);
             saveTags();
 
@@ -601,9 +863,47 @@
         }
 
         function clearLocationTags() {
-            tagLayer.clearLayers();
-            localStorage.removeItem(savedTagsKey);
-            tagStatusEl.textContent = 'All saved tags cleared.';
+            const layers = [];
+            tagLayer.eachLayer((layer) => {
+                layers.push(layer);
+            });
+
+            if (!layers.length) {
+                tagStatusEl.textContent = 'No tags to remove yet.';
+                return;
+            }
+
+            const confirmed = window.confirm('Remove the latest tag?');
+            if (!confirmed) {
+                tagStatusEl.textContent = 'Tag removal cancelled.';
+                return;
+            }
+
+            const latestLayer = layers.reduce((latest, layer) => {
+                const latestStamp = Number(latest?.options?.meta?.timestamp || 0);
+                const layerStamp = Number(layer?.options?.meta?.timestamp || 0);
+                return layerStamp >= latestStamp ? layer : latest;
+            }, layers[0]);
+
+            const removedType = latestLayer?.options?.meta?.tagType || 'Latest';
+            tagLayer.removeLayer(latestLayer);
+            saveTags();
+            tagStatusEl.textContent = `${removedType} tag removed.`;
+        }
+
+        function toggleSatelliteMode() {
+            if (isSatelliteMode) {
+                map.removeLayer(satelliteLayer);
+                streetLayer.addTo(map);
+                satelliteModeLabelEl.textContent = 'Satellite: Off';
+                isSatelliteMode = false;
+                return;
+            }
+
+            map.removeLayer(streetLayer);
+            satelliteLayer.addTo(map);
+            satelliteModeLabelEl.textContent = 'Satellite: On';
+            isSatelliteMode = true;
         }
 
         function ensureUserMarker(position, forceRecreate = false) {
@@ -670,12 +970,12 @@
             cityLayer.clearLayers();
 
             if (!cityKey || !cityPresets[cityKey]) {
-                cityStatusEl.textContent = 'Select a city to zoom and highlight.';
+                setCityStatus('Select a city to zoom and highlight.');
                 return;
             }
 
             const city = cityPresets[cityKey];
-            cityStatusEl.textContent = `Loading ${city.label} boundary...`;
+            setCityStatus(`Loading ${city.label} boundary...`);
 
             let boundaryLoaded = false;
             try {
@@ -695,7 +995,7 @@
                         if (watchId !== null) {
                             stopTracking();
                         }
-                        cityStatusEl.textContent = `✓ ${city.label} boundary highlighted. Locator remains draggable at current position.`;
+                        setCityStatus(`✓ ${city.label} boundary highlighted. Locator remains draggable at current position.`);
 
                         map.fitBounds(bounds, {
                             padding: [20, 20],
@@ -727,11 +1027,11 @@
                     duration: 0.8,
                 });
 
-                cityStatusEl.textContent = `${city.label} approximate highlight shown. Locator remains draggable at current position.`;
+                setCityStatus(`${city.label} approximate highlight shown. Locator remains draggable at current position.`);
                 return;
             }
 
-            cityStatusEl.textContent = `${city.label} boundary highlighted. Locator remains draggable at current position.`;
+            setCityStatus(`${city.label} boundary highlighted. Locator remains draggable at current position.`);
         }
 
         function refreshMapSize() {
@@ -826,7 +1126,7 @@
 
         trackBtn.addEventListener('click', startTracking);
         addTagBtn.addEventListener('click', createLocationTag);
-        clearTagsBtn.addEventListener('click', clearLocationTags);
+        satelliteModeBtn.addEventListener('click', toggleSatelliteMode);
         citySelectEl.addEventListener('change', async () => {
             await highlightCity(citySelectEl.value);
         });
