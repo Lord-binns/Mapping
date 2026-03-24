@@ -1,7 +1,6 @@
 import './bootstrap';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GUI } from 'lil-gui';
 import { gsap } from 'gsap';
 import worldSvg from '@svg-maps/world/world.svg?raw';
 
@@ -136,7 +135,6 @@ if (document.body.dataset.page === 'globe-map') {
 	const dataUris = [];
 
 	initScene();
-	createControls();
 
 	window.addEventListener('resize', updateSize);
 
@@ -375,27 +373,6 @@ if (document.body.dataset.page === 'globe-map') {
 		containerEl.style.width = `${side}px`;
 		containerEl.style.height = `${side}px`;
 		renderer.setSize(side, side);
-	}
-
-	function createControls() {
-		const gui = new GUI();
-		gui.close();
-
-		gui.addColor(params, 'strokeColor').onChange(prepareHiResTextures).name('stroke');
-		gui.addColor(params, 'defaultColor').onChange(prepareHiResTextures).name('color');
-		gui.addColor(params, 'hoverColor').onChange(prepareLowResTextures).name('highlight');
-		gui
-			.addColor(params, 'fogColor')
-			.onChange(() => {
-				scene.fog = new THREE.Fog(params.fogColor, 0, params.fogDistance);
-			})
-			.name('fog');
-		gui
-			.add(params, 'fogDistance', 1, 4)
-			.onChange(() => {
-				scene.fog = new THREE.Fog(params.fogColor, 0, params.fogDistance);
-			})
-			.name('fog distance');
 	}
 
 	if (topControlsEl) {
