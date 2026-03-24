@@ -366,7 +366,7 @@
                             <button id="add-location-tag" class="btn" type="button">Add Tag Here</button>
                             <button id="clear-location-tags" class="btn alt" type="button">Clear My Tags</button>
                         </div>
-                        <p id="tag-status" class="tag-help">Set your location first, then add a tag.</p>
+                        <p id="tag-status" class="tag-help">Set your location first, then drag the locator pin if needed and add a tag.</p>
                     </section>
                 </aside>
 
@@ -486,7 +486,7 @@
             addTagMarker(currentPosition.lat, currentPosition.lng, selectedType, noteValue);
             saveTags();
 
-            tagStatusEl.textContent = `${selectedType} tag added at your current location.`;
+            tagStatusEl.textContent = `${selectedType} tag added at the locator pin position.`;
             tagNoteEl.value = '';
         }
 
@@ -509,6 +509,17 @@
             return 14;
         }
 
+        function updatePositionFromMarker(lat, lng) {
+            currentPosition = { lat, lng };
+            coordsEl.textContent = `Pinned location: ${lat.toFixed(6)}, ${lng.toFixed(6)} (manual)`;
+            tagStatusEl.textContent = 'Locator pin moved. You can now add a tag at this position.';
+
+            if (accuracyCircle) {
+                accuracyCircle.setLatLng([lat, lng]);
+                accuracyCircle.setRadius(10);
+            }
+        }
+
         function setUserLocation(lat, lng, accuracy) {
             const position = [lat, lng];
             const safeAccuracy = Math.max(accuracy || 0, 10);
@@ -517,7 +528,16 @@
             if (userMarker) {
                 userMarker.setLatLng(position);
             } else {
-                userMarker = L.marker(position).addTo(map);
+                userMarker = L.marker(position, { draggable: true }).addTo(map);
+                userMarker.on('dragstart', () => {
+                    if (watchId !== null) {
+                        stopTracking();
+                    }
+                });
+                userMarker.on('dragend', (event) => {
+                    const draggedLatLng = event.target.getLatLng();
+                    updatePositionFromMarker(draggedLatLng.lat, draggedLatLng.lng);
+                });
             }
 
             if (accuracyCircle) {
