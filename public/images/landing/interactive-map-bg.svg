@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" fill="none">
+  <defs>
+    <linearGradient id="ocean" x1="0" y1="0" x2="1400" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#091426"/>
+      <stop offset="1" stop-color="#0d3348"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(310 140) rotate(22) scale(880 500)">
+      <stop stop-color="#9fddff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#9fddff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blurSoft" x="-12%" y="-12%" width="124%" height="124%">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="800" rx="14" fill="url(#ocean)"/>
+  <rect width="1400" height="800" rx="14" fill="url(#shine)"/>
+
+  <g stroke="rgba(175,225,250,0.16)" stroke-width="1.4">
+    <path d="M0 100H1400"/>
+    <path d="M0 200H1400"/>
+    <path d="M0 300H1400"/>
+    <path d="M0 400H1400"/>
+    <path d="M0 500H1400"/>
+    <path d="M0 600H1400"/>
+    <path d="M0 700H1400"/>
+    <path d="M100 0V800"/>
+    <path d="M200 0V800"/>
+    <path d="M300 0V800"/>
+    <path d="M400 0V800"/>
+    <path d="M500 0V800"/>
+    <path d="M600 0V800"/>
+    <path d="M700 0V800"/>
+    <path d="M800 0V800"/>
+    <path d="M900 0V800"/>
+    <path d="M1000 0V800"/>
+    <path d="M1100 0V800"/>
+    <path d="M1200 0V800"/>
+    <path d="M1300 0V800"/>
+  </g>
+
+  <g fill="#8ddcff" fill-opacity="0.34" stroke="#c8f1ff" stroke-opacity="0.52" stroke-width="2.6" filter="url(#blurSoft)">
+    <path d="M120 185 C150 130, 220 102, 290 110 C355 117, 408 145, 428 183 C446 219, 432 258, 393 286 C351 316, 306 320, 276 305 C246 292, 223 298, 198 288 C165 273, 133 247, 114 219 Z"/>
+    <path d="M405 78 C430 59, 472 55, 506 68 C530 79, 534 103, 516 125 C492 150, 449 153, 418 137 C394 124, 389 97, 405 78 Z"/>
+    <path d="M332 338 C370 338, 404 356, 425 388 C445 420, 447 462, 432 503 C418 541, 392 575, 359 605 C333 628, 303 630, 286 609 C269 588, 273 553, 287 519 C301 483, 301 448, 296 417 C292 389, 300 355, 332 338 Z"/>
+    <path d="M602 180 C632 156, 676 147, 719 153 C754 157, 787 173, 805 196 C814 209, 808 226, 787 236 C753 252, 708 252, 670 243 C636 235, 607 216, 597 198 C593 190, 594 185, 602 180 Z"/>
+    <path d="M648 258 C685 248, 724 252, 758 273 C787 291, 806 324, 809 362 C812 401, 802 447, 777 488 C750 533, 706 563, 668 559 C636 555, 614 524, 603 484 C592 444, 594 399, 601 359 C609 316, 620 276, 648 258 Z"/>
+    <path d="M786 172 C845 142, 919 136, 994 145 C1061 153, 1134 176, 1183 214 C1217 240, 1222 276, 1197 307 C1172 338, 1122 355, 1064 357 C1014 359, 969 348, 930 327 C894 308, 856 304, 821 303 C793 301, 771 287, 761 261 C748 229, 754 190, 786 172 Z"/>
+    <path d="M1096 275 C1104 267, 1116 268, 1122 278 C1127 286, 1122 296, 1112 300 C1102 302, 1094 295, 1093 286 Z"/>
+    <path d="M1027 493 C1067 472, 1121 468, 1168 482 C1202 492, 1224 516, 1224 546 C1224 571, 1208 592, 1180 603 C1142 619, 1090 619, 1049 601 C1019 588, 998 563, 998 536 C998 517, 1008 503, 1027 493 Z"/>
+    <path d="M818 474 C828 467, 842 470, 848 482 C854 496, 846 513, 833 517 C821 519, 810 510, 808 496 Z"/>
+    <path d="M150 700 C280 674, 450 665, 650 675 C860 685, 1040 692, 1245 682 C1210 730, 1080 752, 892 758 C702 764, 492 760, 323 748 C231 741, 176 725, 150 700 Z"/>
+  </g>
+
+  <g stroke="#7dd3fc" stroke-opacity="0.42" stroke-width="3.6" stroke-linecap="round">
+    <path d="M190 224C335 170 490 166 653 199C834 236 980 275 1162 255"/>
+    <path d="M260 553C430 493 617 470 794 487C945 501 1088 542 1183 571"/>
+  </g>
+
+  <g fill="#e0f2fe" fill-opacity="0.95" font-family="Roboto, Helvetica, sans-serif" font-size="26" font-weight="700">
+    <text x="44" y="64">CleanEarth Sentinel - Global Monitoring Layer</text>
+  </g>
+</svg>
