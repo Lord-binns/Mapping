@@ -180,6 +180,14 @@
             gap: 8px;
         }
 
+        .city-panel {
+            margin-top: 4px;
+            border-top: 1px solid #e2f1ed;
+            padding-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
         .panel-label {
             margin: 0;
             font-size: 12px;
@@ -217,6 +225,54 @@
             font-size: 12px;
             color: #55706a;
             line-height: 1.4;
+        }
+
+        .tag-pin {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .tag-pin svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+
+        .tag-high-risk {
+            background: #d94848;
+        }
+
+        .tag-dumping-site {
+            background: #a35f00;
+        }
+
+        .tag-contaminated-water {
+            background: #1a6ca8;
+        }
+
+        .tag-illegal-burning {
+            background: #7d3f98;
+        }
+
+        .tag-blocked-drainage {
+            background: #355e3b;
+        }
+
+        .tag-other {
+            background: #5f5f5f;
         }
 
         .content-stack {
@@ -351,6 +407,16 @@
                     </a>
                     <button id="track-location-btn" class="btn" type="button">Track My Location</button>
 
+                    <section class="city-panel" aria-label="City selector">
+                        <p class="panel-label">City Selector</p>
+                        <select id="city-select" class="field" aria-label="Select city">
+                            <option value="">Choose a city to highlight</option>
+                            <option value="manolo-fortich">Manolo Fortich</option>
+                            <option value="cagayan-de-oro">Cagayan de Oro City</option>
+                        </select>
+                        <p id="city-status" class="tag-help">Select a city to zoom and highlight.</p>
+                    </section>
+
                     <section class="report-panel" aria-label="Location tagging">
                         <p class="panel-label">Leave a tag on your location</p>
                         <select id="tag-type" class="field" aria-label="Tag type">
@@ -402,6 +468,8 @@
         const addTagBtn = document.getElementById('add-location-tag');
         const clearTagsBtn = document.getElementById('clear-location-tags');
         const tagStatusEl = document.getElementById('tag-status');
+        const citySelectEl = document.getElementById('city-select');
+        const cityStatusEl = document.getElementById('city-status');
         const savedTagsKey = 'dashboard-location-tags-v1';
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -414,15 +482,49 @@
         let watchId = null;
         let currentPosition = null;
         const tagLayer = L.layerGroup().addTo(map);
+        const cityLayer = L.layerGroup().addTo(map);
+
+        const cityPresets = {
+            'manolo-fortich': {
+                label: 'Manolo Fortich',
+                center: [8.3698, 124.8645],
+                zoom: 12,
+                radius: 4500,
+            },
+            'cagayan-de-oro': {
+                label: 'Cagayan de Oro City',
+                center: [8.4542, 124.6319],
+                zoom: 12,
+                radius: 7000,
+            },
+        };
 
         function getTagStyle(tagType) {
             const styleMap = {
-                'High Risk': { color: '#d94848', fillColor: '#f06d6d' },
-                'Dumping Site': { color: '#a35f00', fillColor: '#e2a13f' },
-                'Contaminated Water': { color: '#1a6ca8', fillColor: '#4ea5dd' },
-                'Illegal Burning': { color: '#7d3f98', fillColor: '#b46ad6' },
-                'Blocked Drainage': { color: '#355e3b', fillColor: '#6baa6f' },
-                Other: { color: '#5f5f5f', fillColor: '#909090' },
+                'High Risk': {
+                    className: 'tag-high-risk',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 9v5"/><circle cx="12" cy="17" r="1"/></svg>',
+                },
+                'Dumping Site': {
+                    className: 'tag-dumping-site',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M7 7l1 12h8l1-12"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>',
+                },
+                'Contaminated Water': {
+                    className: 'tag-contaminated-water',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C9 8 6 10.5 6 14a6 6 0 0 0 12 0c0-3.5-3-6-6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 5 0"/></svg>',
+                },
+                'Illegal Burning': {
+                    className: 'tag-illegal-burning',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 3 1 4.5.2 6.1C11.4 10.8 11 12 12 13.7c.8-1.1 2.2-1.9 3.9-1.7 2.6.3 4.1 2.4 4.1 4.8A8 8 0 1 1 8.2 8.5C9.5 7 10.4 5.3 12 3z"/></svg>',
+                },
+                'Blocked Drainage': {
+                    className: 'tag-blocked-drainage',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="10" rx="1"/><path d="M8 8v10"/><path d="M12 8v10"/><path d="M16 8v10"/><path d="M4 12h16"/><path d="M4 15h16"/></svg>',
+                },
+                Other: {
+                    className: 'tag-other',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/></svg>',
+                },
             };
 
             return styleMap[tagType] || styleMap.Other;
@@ -442,12 +544,14 @@
 
         function addTagMarker(lat, lng, tagType, note, timestamp = Date.now()) {
             const style = getTagStyle(tagType);
-            const marker = L.circleMarker([lat, lng], {
-                radius: 9,
-                color: style.color,
-                fillColor: style.fillColor,
-                fillOpacity: 0.88,
-                weight: 2,
+            const marker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'tag-icon-wrapper',
+                    html: `<span class="tag-pin ${style.className}" aria-hidden="true">${style.icon}</span>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    popupAnchor: [0, -12],
+                }),
                 meta: { tagType, note, timestamp },
             }).addTo(tagLayer);
 
@@ -494,6 +598,34 @@
             tagLayer.clearLayers();
             localStorage.removeItem(savedTagsKey);
             tagStatusEl.textContent = 'All saved tags cleared.';
+        }
+
+        function highlightCity(cityKey) {
+            cityLayer.clearLayers();
+
+            if (!cityKey || !cityPresets[cityKey]) {
+                cityStatusEl.textContent = 'Select a city to zoom and highlight.';
+                return;
+            }
+
+            const city = cityPresets[cityKey];
+
+            L.circle(city.center, {
+                radius: city.radius,
+                color: '#0b6d5a',
+                fillColor: '#00c9a2',
+                fillOpacity: 0.2,
+                weight: 2,
+            }).addTo(cityLayer);
+
+            L.marker(city.center).addTo(cityLayer).bindPopup(`${city.label} highlighted`).openPopup();
+
+            map.flyTo(city.center, city.zoom, {
+                animate: true,
+                duration: 0.8,
+            });
+
+            cityStatusEl.textContent = `${city.label} is highlighted on the map.`;
         }
 
         function refreshMapSize() {
@@ -602,6 +734,9 @@
         trackBtn.addEventListener('click', startTracking);
         addTagBtn.addEventListener('click', createLocationTag);
         clearTagsBtn.addEventListener('click', clearLocationTags);
+        citySelectEl.addEventListener('change', () => {
+            highlightCity(citySelectEl.value);
+        });
 
         loadSavedTags();
 
