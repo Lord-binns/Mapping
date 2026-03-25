@@ -60,3 +60,45 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 # Mapping
 
 - Tankulan boundary fallback workflow: [docs/tankulan-boundary-workflow.md](docs/tankulan-boundary-workflow.md)
+
+## Deploy To Render
+
+This repository includes a Docker-based setup for Render:
+
+- `Dockerfile`
+- `.dockerignore`
+- `scripts/start-render.sh`
+
+### 1. Create Render services
+
+1. Push this repository to GitHub.
+2. In Render, create a **PostgreSQL** database.
+3. In Render, create a **Web Service** from this repo.
+4. For the web service runtime, select **Docker**.
+
+### 2. Configure environment variables
+
+Set these variables in your Render Web Service:
+
+- `APP_NAME=Laravel`
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL=https://<your-render-service>.onrender.com`
+- `APP_KEY=<output of: php artisan key:generate --show>`
+- `DB_CONNECTION=pgsql`
+- `DB_HOST=<from Render PostgreSQL service>`
+- `DB_PORT=5432`
+- `DB_DATABASE=<from Render PostgreSQL service>`
+- `DB_USERNAME=<from Render PostgreSQL service>`
+- `DB_PASSWORD=<from Render PostgreSQL service>`
+- `SESSION_DRIVER=file`
+- `CACHE_STORE=file`
+- `QUEUE_CONNECTION=sync`
+
+The startup script runs `php artisan migrate --force` before starting the app.
+
+### 3. Deploy
+
+Trigger a deploy in Render. Once the build finishes, open your service URL.
+
+If the first deploy fails with an application key error, verify `APP_KEY` is set and redeploy.
