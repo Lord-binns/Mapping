@@ -227,6 +227,10 @@
             gap: 8px;
         }
 
+        .barangay-select-wrap[hidden] {
+            display: none;
+        }
+
         .panel-label {
             margin: 0;
             font-size: 12px;
@@ -458,6 +462,10 @@
             background: #5f5f5f;
         }
 
+        .tag-pin-location {
+            background: #0b6d5a;
+        }
+
         .content-stack {
             display: grid;
             gap: 14px;
@@ -474,6 +482,35 @@
             justify-content: space-between;
             gap: 12px;
             flex-wrap: wrap;
+        }
+
+        .dashboard-top-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-top-actions .btn {
+            padding: 9px 12px;
+            font-size: 11px;
+        }
+
+        .dashboard-top-actions .btn.notification {
+            position: relative;
+            padding-right: 34px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff3b30;
+            box-shadow: 0 0 0 2px #ffffff;
         }
 
         h1 {
@@ -552,6 +589,14 @@
             border-color: #8edac9;
         }
 
+        .temp-switch-fab {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            z-index: 35;
+            box-shadow: 0 12px 24px rgba(0, 121, 101, 0.2);
+        }
+
         @media (max-width: 700px) {
             .navbar {
                 height: auto;
@@ -576,10 +621,25 @@
             #map {
                 height: clamp(280px, 48vh, 420px);
             }
+
+            .dashboard-top-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .temp-switch-fab {
+                right: 12px;
+                bottom: 12px;
+            }
         }
     </style>
 </head>
 <body>
+    <a class="btn temp-switch-fab" href="{{ route('admin.dashboard') }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8" stroke-linecap="round"/><path d="M10 20V4" stroke-linecap="round"/><path d="M16 20v-6" stroke-linecap="round"/><path d="M3 20h18" stroke-linecap="round"/></svg>
+        Admin (Temp)
+    </a>
+
     <header class="navbar">
         <div class="brand">
             <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
@@ -594,12 +654,8 @@
                 <aside class="sidebar" aria-label="Dashboard sidebar">
                     <p class="sidebar-title with-icon">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 17h16" stroke-linecap="round"/></svg>
-                        Menu
+                        Actions
                     </p>
-                    <a class="nav-link" href="{{ route('dashboard') }}">
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Home
-                    </a>
                     <button id="track-location-btn" class="btn" type="button">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4" stroke-linecap="round"/><path d="M12 17v4" stroke-linecap="round"/><path d="M3 12h4" stroke-linecap="round"/><path d="M17 12h4" stroke-linecap="round"/><circle cx="12" cy="12" r="4"/></svg>
                         Track
@@ -614,6 +670,13 @@
                                 <option value="cagayan-de-oro">Cagayan de Oro City</option>
                             </select>
                         </div>
+                        <div id="barangay-select-wrap" class="select-with-icon barangay-select-wrap" hidden>
+                            <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 16h16" stroke-linecap="round"/></svg>
+                            <select id="barangay-select" class="field" aria-label="Select barangay" disabled>
+                                <option value="">Choose Barangay</option>
+                            </select>
+                        </div>
+                        <p id="city-status" class="tag-help">Select a city to zoom and highlight.</p>
                     </section>
 
                     <section class="report-panel" aria-label="Location tagging">
@@ -621,6 +684,7 @@
                             <svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5"/></svg>
                             <select id="tag-type" class="field" aria-label="Tag type">
                                 <option value="">Tag Location</option>
+                                <option value="Pin Location">Pin Location</option>
                                 <option value="High Risk">High Risk</option>
                                 <option value="Dumping Site">Dumping Site</option>
                                 <option value="Contaminated Water">Contaminated Water</option>
@@ -657,6 +721,26 @@
                             <h1>Mapping Dashboard</h1>
                             <p class="meta">Live map view with your current location pin.</p>
                         </div>
+
+                        <div class="dashboard-top-actions" aria-label="Dashboard quick actions">
+                            <a class="btn alt" href="{{ route('dashboard') }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Home
+                            </a>
+                            <button type="button" class="btn alt">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 19h10" stroke-linecap="round"/></svg>
+                                Reports
+                            </button>
+                            <button type="button" class="btn alt notification">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+                                Notifications
+                                <span class="notification-dot" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="btn">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" stroke-linecap="round"/><path d="M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h14" stroke-linecap="round"/></svg>
+                                Export
+                            </button>
+                        </div>
                     </section>
 
                     <section class="map-card" aria-label="Live map">
@@ -673,6 +757,7 @@
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""
     ></script>
+    <script src="https://unpkg.com/osmtogeojson@3.0.0-beta.5/osmtogeojson.js"></script>
     <script>
         const defaultCenter = [14.5995, 120.9842];
         const map = L.map('map').setView(defaultCenter, 12);
@@ -685,6 +770,8 @@
         const satelliteModeLabelEl = document.getElementById('satellite-mode-label');
         const tagStatusEl = document.getElementById('tag-status');
         const citySelectEl = document.getElementById('city-select');
+        const barangaySelectWrapEl = document.getElementById('barangay-select-wrap');
+        const barangaySelectEl = document.getElementById('barangay-select');
         const cityStatusEl = document.getElementById('city-status');
         const savedTagsKey = 'dashboard-location-tags-v1';
 
@@ -705,6 +792,7 @@
         let isSatelliteMode = false;
         const tagLayer = L.layerGroup().addTo(map);
         const cityLayer = L.layerGroup().addTo(map);
+        const barangayLayer = L.layerGroup().addTo(map);
 
         const cityPresets = {
             'manolo-fortich': {
@@ -726,6 +814,56 @@
         };
 
         const cityBoundaryCache = new Map();
+        const barangayBoundaryCache = new Map();
+        const barangaysByCity = {
+            'manolo-fortich': [
+                'Agusan Canyon',
+                'Alae',
+                'Dalirig',
+                'Damilag',
+                'Dicklum',
+                'Kalugmanan',
+                'Lindaban',
+                'Lingion',
+                'Lunocan',
+                'Maluko',
+                'Santiago',
+                'Sankanan',
+                'Santo Nino',
+                'Tankulan',
+                'Ticala',
+            ],
+            'cagayan-de-oro': [
+                'Balulang',
+                'Bugo',
+                'Carmen',
+                'Gusa',
+                'Kauswagan',
+                'Lapasan',
+                'Macasandig',
+                'Nazareth',
+                'Patag',
+                'Puntod',
+            ],
+        };
+
+        const barangayPinOverrides = {
+            'manolo-fortich': {
+                'agusan canyon': [8.322930, 124.809880],
+                damilag: [8.352661, 124.813459],
+                dicklum: [8.372673, 124.849266],
+                kalugmanan: [8.277496, 124.860900],
+                lindaban: [8.289446, 124.846830],
+                lingion: [8.403086, 124.888713],
+                lunocan: [8.431609, 124.839909],
+                maluko: [8.374209, 124.955686],
+                santiago: [8.436350, 124.995514],
+                sankanan: [8.316145, 124.858090],
+                'santo nino': [8.430081, 124.864617],
+                ticala: [8.340169, 124.892535],
+                alae: [8.422600, 124.814258],
+            },
+        };
 
         function setCityStatus(message) {
             if (cityStatusEl) {
@@ -733,8 +871,141 @@
             }
         }
 
+        function getSelectedBarangayLabel() {
+            if (!barangaySelectEl) {
+                return '';
+            }
+
+            const selectedOption = barangaySelectEl.options[barangaySelectEl.selectedIndex];
+            return selectedOption ? selectedOption.textContent : '';
+        }
+
+        function hasAreaGeometry(geojson) {
+            if (!geojson) {
+                return false;
+            }
+
+            const type = String(geojson.type || '').toLowerCase();
+            if (type === 'polygon' || type === 'multipolygon') {
+                return true;
+            }
+
+            if (type === 'feature') {
+                return hasAreaGeometry(geojson.geometry);
+            }
+
+            if (type === 'featurecollection' && Array.isArray(geojson.features)) {
+                return geojson.features.some((feature) => hasAreaGeometry(feature));
+            }
+
+            return false;
+        }
+
+        function escapeOverpassRegex(input) {
+            return String(input).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function getBarangayPinOverride(cityKey, barangayLabel) {
+            const cityOverrides = barangayPinOverrides[cityKey];
+            if (!cityOverrides) {
+                return null;
+            }
+
+            const normalized = String(barangayLabel || '').trim().toLowerCase();
+            return cityOverrides[normalized] || null;
+        }
+
+        function getCenterFromGeoJson(geojson) {
+            if (!hasAreaGeometry(geojson)) {
+                return null;
+            }
+
+            try {
+                const layer = L.geoJSON(geojson);
+                const bounds = layer.getBounds();
+                if (!bounds.isValid()) {
+                    return null;
+                }
+
+                const center = bounds.getCenter();
+                return [center.lat, center.lng];
+            } catch {
+                return null;
+            }
+        }
+
+        async function fetchBarangayBoundaryFromOverpass(cityKey, barangayLabel) {
+            if (typeof osmtogeojson !== 'function') {
+                return null;
+            }
+
+            const city = cityPresets[cityKey];
+            if (!city?.osmId) {
+                return null;
+            }
+
+            const escapedBarangayRegex = escapeOverpassRegex(barangayLabel);
+            const overpassQuery = `[out:json][timeout:35];\nrel(${city.osmId})->.city_rel;\nmap_to_area.city_rel->.city_area;\n(\n  relation(area.city_area)["boundary"="administrative"]["name"~"^(Barangay )?${escapedBarangayRegex}$",i];\n  way(area.city_area)["boundary"="administrative"]["name"~"^(Barangay )?${escapedBarangayRegex}$",i];\n);\nout body geom;`;
+
+            try {
+                const response = await fetch('https://overpass-api.de/api/interpreter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=UTF-8',
+                        Accept: 'application/json',
+                    },
+                    body: overpassQuery,
+                });
+
+                if (!response.ok) {
+                    console.error(`Overpass barangay lookup failed for ${barangayLabel}:`, response.status);
+                    return null;
+                }
+
+                const overpassJson = await response.json();
+                const geojson = osmtogeojson(overpassJson);
+                if (!hasAreaGeometry(geojson)) {
+                    return null;
+                }
+
+                return geojson;
+            } catch (err) {
+                console.error(`Error fetching Overpass boundary for ${barangayLabel}:`, err);
+                return null;
+            }
+        }
+
+        function resetBarangaySelect(cityKey) {
+            if (!barangaySelectEl || !barangaySelectWrapEl) {
+                return;
+            }
+
+            const barangays = barangaysByCity[cityKey] || [];
+            barangaySelectEl.innerHTML = '<option value="">Choose Barangay</option>';
+
+            if (!barangays.length) {
+                barangaySelectWrapEl.hidden = true;
+                barangaySelectEl.disabled = true;
+                return;
+            }
+
+            barangays.forEach((barangay) => {
+                const option = document.createElement('option');
+                option.value = barangay.toLowerCase().replace(/\s+/g, '-');
+                option.textContent = barangay;
+                barangaySelectEl.appendChild(option);
+            });
+
+            barangaySelectWrapEl.hidden = false;
+            barangaySelectEl.disabled = false;
+        }
+
         function getTagStyle(tagType) {
             const styleMap = {
+                'Pin Location': {
+                    className: 'tag-pin-location',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-5.4-7-11a7 7 0 1 1 14 0c0 5.6-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+                },
                 'High Risk': {
                     className: 'tag-high-risk',
                     icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 9v5"/><circle cx="12" cy="17" r="1"/></svg>',
@@ -946,7 +1217,6 @@
                 const response = await fetch(endpoint, {
                     headers: {
                         Accept: 'application/json',
-                        'User-Agent': 'CapsLocalDev/1.0',
                     },
                 });
 
@@ -962,6 +1232,133 @@
                 return boundary;
             } catch (err) {
                 console.error(`Error fetching boundary for ${cityKey}:`, err);
+                return null;
+            }
+        }
+
+        async function fetchOsmLookupGeometry(osmType, osmId) {
+            const typeMap = {
+                relation: 'R',
+                way: 'W',
+                node: 'N',
+            };
+
+            const prefix = typeMap[String(osmType || '').toLowerCase()];
+            if (!prefix || !osmId) {
+                return null;
+            }
+
+            const endpoint = `https://nominatim.openstreetmap.org/lookup?osm_ids=${prefix}${osmId}&format=jsonv2&polygon_geojson=1`;
+            try {
+                const response = await fetch(endpoint, {
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    return null;
+                }
+
+                const result = await response.json();
+                const first = Array.isArray(result) ? result[0] : result;
+                const geojson = first?.geojson || null;
+                return hasAreaGeometry(geojson) ? geojson : null;
+            } catch {
+                return null;
+            }
+        }
+
+        async function fetchBarangayBoundary(cityKey, barangayLabel) {
+            const cacheKey = `${cityKey}:${barangayLabel.toLowerCase()}`;
+            if (barangayBoundaryCache.has(cacheKey)) {
+                return barangayBoundaryCache.get(cacheKey);
+            }
+
+            const city = cityPresets[cityKey];
+            if (!city || !barangayLabel) {
+                return null;
+            }
+
+            const query = `Barangay ${barangayLabel}, ${city.label}, Philippines`;
+            const endpoint = `https://nominatim.openstreetmap.org/search?format=jsonv2&polygon_geojson=1&addressdetails=1&limit=8&countrycodes=ph&q=${encodeURIComponent(query)}`;
+
+            try {
+                // First try city-scoped Overpass so we stay inside the selected city.
+                const overpassGeoJson = await fetchBarangayBoundaryFromOverpass(cityKey, barangayLabel);
+                if (overpassGeoJson) {
+                    const overpassCenter = getCenterFromGeoJson(overpassGeoJson);
+                    const overpassPayload = {
+                        geojson: overpassGeoJson,
+                        lat: Number(overpassCenter?.[0] ?? city.center[0]),
+                        lon: Number(overpassCenter?.[1] ?? city.center[1]),
+                    };
+                    barangayBoundaryCache.set(cacheKey, overpassPayload);
+                    return overpassPayload;
+                }
+
+                // Fallback to Nominatim only if Overpass has no match.
+                const response = await fetch(endpoint, {
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    console.error(`Barangay lookup failed for ${query}:`, response.status);
+                    return null;
+                }
+
+                const result = await response.json();
+                const resultList = Array.isArray(result) ? result : [];
+                const targetBarangay = barangayLabel.trim().toLowerCase();
+                const targetCity = city.label.toLowerCase();
+
+                const first = resultList.find((item) => {
+                    const address = item?.address || {};
+                    const nameCandidates = [
+                        address.suburb,
+                        address.neighbourhood,
+                        address.village,
+                        address.quarter,
+                        item?.name,
+                    ]
+                        .filter(Boolean)
+                        .map((value) => String(value).toLowerCase());
+
+                    const displayName = String(item?.display_name || '').toLowerCase();
+                    const isBarangayMatch = nameCandidates.some((value) => value.includes(targetBarangay));
+                    const isCityMatch = displayName.includes(targetCity);
+                    return isBarangayMatch && isCityMatch;
+                }) || null;
+
+                const payload = first
+                    ? {
+                        geojson: first.geojson || null,
+                        lat: Number(first.lat),
+                        lon: Number(first.lon),
+                        boundingbox: Array.isArray(first.boundingbox)
+                            ? first.boundingbox.map((value) => Number(value))
+                            : null,
+                    }
+                    : null;
+
+                if (first && !hasAreaGeometry(payload?.geojson)) {
+                    const lookupGeoJson = await fetchOsmLookupGeometry(first.osm_type, first.osm_id);
+                    if (lookupGeoJson) {
+                        payload.geojson = lookupGeoJson;
+                        const lookupCenter = getCenterFromGeoJson(lookupGeoJson);
+                        if (lookupCenter) {
+                            payload.lat = Number(lookupCenter[0]);
+                            payload.lon = Number(lookupCenter[1]);
+                        }
+                    }
+                }
+
+                barangayBoundaryCache.set(cacheKey, payload);
+                return payload;
+            } catch (err) {
+                console.error(`Error fetching barangay boundary for ${query}:`, err);
                 return null;
             }
         }
@@ -1032,6 +1429,80 @@
             }
 
             setCityStatus(`${city.label} boundary highlighted. Locator remains draggable at current position.`);
+        }
+
+        async function highlightBarangay(cityKey, barangayValue) {
+            barangayLayer.clearLayers();
+
+            if (!cityKey || !barangayValue) {
+                return;
+            }
+
+            const city = cityPresets[cityKey];
+            const barangayLabel = getSelectedBarangayLabel();
+            if (!city || !barangayLabel) {
+                return;
+            }
+
+            setCityStatus(`Loading ${barangayLabel} highlight...`);
+
+            let barangayData = null;
+            try {
+                barangayData = await fetchBarangayBoundary(cityKey, barangayLabel);
+                const overridePoint = getBarangayPinOverride(cityKey, barangayLabel);
+                const point = Array.isArray(overridePoint)
+                    ? overridePoint
+                    : (Number.isFinite(barangayData?.lat) && Number.isFinite(barangayData?.lon)
+                        ? [barangayData.lat, barangayData.lon]
+                        : city.center);
+
+                L.circle(point, {
+                    radius: 400,
+                    color: '#1565c0',
+                    fillColor: '#42a5f5',
+                    fillOpacity: 0.2,
+                    weight: 2,
+                }).addTo(barangayLayer);
+
+                L.circleMarker(point, {
+                    radius: 7,
+                    color: '#ffffff',
+                    fillColor: '#1565c0',
+                    fillOpacity: 1,
+                    weight: 2,
+                })
+                    .bindPopup(`${barangayLabel} (pin highlight)`)
+                    .addTo(barangayLayer);
+
+                map.flyTo(point, 15, {
+                    animate: true,
+                    duration: 0.8,
+                });
+
+                if (Array.isArray(overridePoint)) {
+                    setCityStatus(`${barangayLabel} highlighted by circle (manual pinned location).`);
+                } else {
+                    setCityStatus(`${barangayLabel} highlighted by circle.`);
+                }
+                return;
+            } catch {
+                // Keep fallback below.
+            }
+
+            L.circle(city.center, {
+                radius: 400,
+                color: '#1565c0',
+                fillColor: '#42a5f5',
+                fillOpacity: 0.2,
+                weight: 2,
+            }).addTo(barangayLayer);
+
+            map.flyTo(city.center, city.zoom, {
+                animate: true,
+                duration: 0.8,
+            });
+
+            setCityStatus(`${barangayLabel} highlighted by circle.`);
         }
 
         function refreshMapSize() {
@@ -1128,8 +1599,15 @@
         addTagBtn.addEventListener('click', createLocationTag);
         satelliteModeBtn.addEventListener('click', toggleSatelliteMode);
         citySelectEl.addEventListener('change', async () => {
+            barangayLayer.clearLayers();
+            resetBarangaySelect(citySelectEl.value);
             await highlightCity(citySelectEl.value);
         });
+        barangaySelectEl.addEventListener('change', async () => {
+            await highlightBarangay(citySelectEl.value, barangaySelectEl.value);
+        });
+
+        resetBarangaySelect(citySelectEl.value);
 
         loadSavedTags();
 
