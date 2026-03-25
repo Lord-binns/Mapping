@@ -24,61 +24,6 @@
             position: relative;
         }
 
-        #progressbar {
-            margin: 0 0 30px;
-            padding: 0;
-            overflow: hidden;
-            counter-reset: step;
-            display: flex;
-        }
-
-        #progressbar li {
-            list-style-type: none;
-            color: #0b6d5a;
-            text-transform: uppercase;
-            font-size: 10px;
-            font-weight: 700;
-            width: 33.33%;
-            position: relative;
-            letter-spacing: 0.04em;
-        }
-
-        #progressbar li::before {
-            content: counter(step);
-            counter-increment: step;
-            width: 24px;
-            line-height: 24px;
-            display: block;
-            font-size: 11px;
-            color: #0b6d5a;
-            background: #ffffff;
-            border: 1px solid #bfe9dc;
-            border-radius: 6px;
-            margin: 0 auto 8px;
-        }
-
-        #progressbar li::after {
-            content: '';
-            width: 100%;
-            height: 2px;
-            background: #bfe9dc;
-            position: absolute;
-            left: -50%;
-            top: 11px;
-            z-index: -1;
-        }
-
-        #progressbar li:first-child::after {
-            content: none;
-        }
-
-        #progressbar li.active::before,
-        #progressbar li.active::after {
-            background: #00c9a2;
-            color: #ffffff;
-            border-color: #00c9a2;
-        }
-
         #msform fieldset {
             background: #ffffff;
             border: 1px solid #d9ebe6;
@@ -88,10 +33,6 @@
             box-sizing: border-box;
             width: 100%;
             position: relative;
-        }
-
-        #msform fieldset:not(:first-of-type) {
-            display: none;
         }
 
         .fs-title {
@@ -170,6 +111,24 @@
             border-color: #0b6d5a;
         }
 
+        .form-error {
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #efb8b8;
+            background: #fff4f4;
+            color: #a11b1b;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .field-error {
+            margin: -4px 0 10px;
+            color: #a11b1b;
+            text-align: left;
+            font-size: 12px;
+        }
+
         @media (max-width: 650px) {
             body {
                 padding: 14px;
@@ -186,91 +145,41 @@
     </style>
 </head>
 <body>
-    <form id="msform" action="#" method="get">
-        <ul id="progressbar">
-            <li class="active">Account Setup</li>
-            <li>Social Profiles</li>
-            <li>Personal Details</li>
-        </ul>
-
+    <form id="msform" action="{{ route('register.store') }}" method="post">
+        @csrf
         <fieldset>
             <h2 class="fs-title">Create Your Account</h2>
-            <h3 class="fs-subtitle">This is step 1</h3>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="pass" placeholder="Password" required>
-            <input type="password" name="cpass" placeholder="Confirm Password" required>
-            <input type="button" name="next" class="next action-button" value="Next">
+            <h3 class="fs-subtitle">Sign up to access the mapping dashboard</h3>
+
+            @if ($errors->any())
+                <p class="form-error">{{ $errors->first() }}</p>
+            @endif
+
+            <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required>
+            @error('name')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
+
+            <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+            @error('email')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
+
+            <input type="password" name="password" placeholder="Password (min 8 chars)" required>
+            @error('password')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
+
+            <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+
+            <button type="submit" class="action-button">Register</button>
+            <a class="action-button secondary" href="{{ route('login') }}">Back To Login</a>
+
             <div class="top-links">
                 <a href="{{ url('/') }}">Back Home</a>
-                <a href="{{ route('login') }}">Login</a>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <h2 class="fs-title">Social Profiles</h2>
-            <h3 class="fs-subtitle">Your presence on the social network</h3>
-            <input type="text" name="twitter" placeholder="Twitter">
-            <input type="text" name="facebook" placeholder="Facebook">
-            <input type="text" name="gplus" placeholder="Google Plus">
-            <input type="button" name="previous" class="previous action-button secondary" value="Previous">
-            <input type="button" name="next" class="next action-button" value="Next">
-        </fieldset>
-
-        <fieldset>
-            <h2 class="fs-title">Personal Details</h2>
-            <h3 class="fs-subtitle">We will never sell it</h3>
-            <input type="text" name="fname" placeholder="First Name" required>
-            <input type="text" name="lname" placeholder="Last Name" required>
-            <input type="text" name="phone" placeholder="Phone" required>
-            <input type="button" name="previous" class="previous action-button secondary" value="Previous">
-            <button type="submit" class="action-button">Submit</button>
-            <div class="top-links">
                 <a href="{{ route('login') }}">Already have an account</a>
             </div>
         </fieldset>
     </form>
-
-    <script>
-        (function () {
-            const form = document.getElementById('msform');
-            if (!form) return;
-
-            const fieldsets = Array.from(form.querySelectorAll('fieldset'));
-            const progressSteps = Array.from(document.querySelectorAll('#progressbar li'));
-            let currentIndex = 0;
-
-            function showStep(index) {
-                fieldsets.forEach((fieldset, i) => {
-                    fieldset.style.display = i === index ? 'block' : 'none';
-                });
-
-                progressSteps.forEach((step, i) => {
-                    step.classList.toggle('active', i <= index);
-                });
-
-                currentIndex = index;
-            }
-
-            form.addEventListener('click', function (event) {
-                const target = event.target;
-
-                if (target.classList.contains('next')) {
-                    event.preventDefault();
-                    if (currentIndex < fieldsets.length - 1) {
-                        showStep(currentIndex + 1);
-                    }
-                }
-
-                if (target.classList.contains('previous')) {
-                    event.preventDefault();
-                    if (currentIndex > 0) {
-                        showStep(currentIndex - 1);
-                    }
-                }
-            });
-
-            showStep(0);
-        })();
-    </script>
 </body>
 </html>

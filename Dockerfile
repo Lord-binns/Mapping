@@ -23,12 +23,15 @@ WORKDIR /var/www/html
 RUN apk add --no-cache \
     bash \
     libpq \
-    libzip \
+  libzip \
+  libzip-dev \
+    mariadb-connector-c-dev \
     postgresql-dev \
     sqlite-dev \
     zip \
   && docker-php-ext-install \
     pdo \
+    pdo_mysql \
     pdo_pgsql \
     pdo_sqlite \
     zip

@@ -79,6 +79,25 @@
             background: #ffffff;
         }
 
+        .admin-nav .back-link-button {
+            margin-top: 6px;
+            border: 1px solid #8edac9;
+            border-radius: 10px;
+            color: #0b6d5a;
+            background: #ffffff;
+            padding: 10px 12px;
+            font-size: 14px;
+            letter-spacing: 0.02em;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .admin-nav .back-link-button:hover {
+            background: #ecfffb;
+            border-color: #9bdcca;
+            color: #0b6d5a;
+        }
+
         .admin-main {
             display: grid;
             gap: 14px;
@@ -355,6 +374,10 @@
                 <a class="{{ request()->routeIs('admin.users') ? 'is-active' : '' }}" href="{{ route('admin.users') }}">Users</a>
                 <a class="{{ request()->routeIs('admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings') }}">Settings</a>
                 <a class="back-link" href="{{ url('/') }}">Back to Site</a>
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button class="back-link-button" type="submit">Log Out</button>
+                </form>
             </nav>
         </aside>
 

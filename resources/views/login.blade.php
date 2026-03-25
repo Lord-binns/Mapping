@@ -111,6 +111,24 @@
             border-color: #0b6d5a;
         }
 
+        .form-error {
+            margin: 0 0 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #efb8b8;
+            background: #fff4f4;
+            color: #a11b1b;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .field-error {
+            margin: -4px 0 10px;
+            color: #a11b1b;
+            text-align: left;
+            font-size: 12px;
+        }
+
         @media (max-width: 650px) {
             body {
                 padding: 14px;
@@ -127,12 +145,24 @@
     </style>
 </head>
 <body>
-    <form id="msform" action="{{ route('dashboard') }}" method="get">
+    <form id="msform" action="{{ route('login.attempt') }}" method="post">
+        @csrf
         <fieldset>
             <h2 class="fs-title">Login</h2>
             <h3 class="fs-subtitle">Access your Clean Earth Interactive Mapping dashboard</h3>
-            <input id="email" name="email" type="email" placeholder="Email" required>
+            @if ($errors->any())
+                <p class="form-error">{{ $errors->first() }}</p>
+            @endif
+
+            <input id="email" name="email" type="email" placeholder="Email" value="{{ old('email') }}" required>
+            @error('email')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
+
             <input id="password" name="password" type="password" placeholder="Password" required>
+            @error('password')
+                <p class="field-error">{{ $message }}</p>
+            @enderror
             <button class="action-button" type="submit">Log In</button>
             <a class="action-button secondary" href="{{ route('register') }}">Create Account</a>
             <div class="top-links">

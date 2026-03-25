@@ -708,10 +708,13 @@
                     </section>
 
                     <div class="sidebar-footer">
-                        <a class="sidebar-logout" href="{{ url('/') }}">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke-linecap="round"/><path d="M21 4v16" stroke-linecap="round"/></svg>
-                            Log Out
-                        </a>
+                        <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <button class="sidebar-logout" type="submit">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke-linecap="round"/><path d="M21 4v16" stroke-linecap="round"/></svg>
+                                Log Out
+                            </button>
+                        </form>
                     </div>
                 </aside>
 
