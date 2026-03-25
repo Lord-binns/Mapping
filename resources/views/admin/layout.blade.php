@@ -208,13 +208,6 @@
             flex-shrink: 0;
         }
 
-        .temp-switch-fab {
-            position: fixed;
-            right: 16px;
-            bottom: 16px;
-            z-index: 35;
-            box-shadow: 0 12px 24px rgba(0, 121, 101, 0.2);
-        }
 
         .page-table {
             width: 100%;
@@ -350,20 +343,11 @@
                 justify-content: flex-start;
             }
 
-            .temp-switch-fab {
-                right: 12px;
-                bottom: 12px;
-            }
         }
     </style>
     @stack('head')
 </head>
 <body>
-    <a class="btn temp-switch-fab" href="{{ route('dashboard') }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        User (Temp)
-    </a>
-
     <div class="admin-shell">
         <aside class="admin-sidebar">
             <h2 class="admin-brand">Admin Panel</h2>

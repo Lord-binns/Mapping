@@ -19,9 +19,15 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-Route::view('/dashboard', 'dashboard')
-    ->middleware('auth')
-    ->name('dashboard');
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    if ($user && $user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
