@@ -690,6 +690,7 @@
                             </select>
                         </div>
                         <input id="tag-note" class="field-input" type="text" maxlength="90" placeholder="Optional note (ex: near creek entrance)">
+                        <input id="tag-image" class="field-input" type="file" accept="image/*" style="padding:6px 10px; font-size:12px; cursor:pointer;" placeholder="Upload image">
                         <div class="report-actions">
                             <button id="add-location-tag" class="btn" type="button">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14" stroke-linecap="round"/><path d="M5 12h14" stroke-linecap="round"/></svg>
@@ -1158,6 +1159,11 @@
                 formData.append('latitude', currentPosition.lat);
                 formData.append('longitude', currentPosition.lng);
                 formData.append('type', dbType);
+                
+                const imageInput = document.getElementById('tag-image');
+                if (imageInput && imageInput.files[0]) {
+                    formData.append('image', imageInput.files[0]);
+                }
 
                 const response = await fetch('/pins', {
                     method: 'POST',
@@ -1171,6 +1177,8 @@
                     tagStatusEl.textContent = `✅ "${selectedType}" tag submitted! It will appear on the map once an admin approves it.`;
                     tagNoteEl.value = '';
                     tagTypeEl.value = '';
+                    const imageInput = document.getElementById('tag-image');
+                    if (imageInput) imageInput.value = '';
 
                     // Show a temporary pending marker so user knows where they tagged
                     const pendingIcon = L.divIcon({

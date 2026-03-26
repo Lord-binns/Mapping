@@ -207,6 +207,13 @@
                                 @if($pin->description)
                                     <br><span style="color:#7aada0; font-size:12px;">{{ Str::limit($pin->description, 55) }}</span>
                                 @endif
+                                @if($pin->image)
+                                    <div style="margin-top: 6px;">
+                                        <a href="{{ $pin->image }}" target="_blank" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#0b6d5a; background:#e7fbf5; padding:3px 8px; border-radius:6px; text-decoration:none;">
+                                            📷 View Photo
+                                        </a>
+                                    </div>
+                                @endif
                             </td>
                             <td><span class="badge badge-type">{{ ucfirst($pin->type) }}</span></td>
                             <td style="font-size:12px; color:#55706a; white-space:nowrap;">
