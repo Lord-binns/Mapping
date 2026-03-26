@@ -80,40 +80,57 @@
 <section class="panel" aria-label="Recent activity">
 	<h3>Recent Activity</h3>
 	<p>Latest validation and moderation actions from admins.</p>
-	<table class="page-table">
-		<thead>
-			<tr>
-				<th>Time</th>
-				<th>Action</th>
-				<th>Location</th>
-				<th>Owner</th>
-				<th>Status</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>09:42</td>
-				<td>Report validated</td>
-				<td>Sankanan</td>
-				<td>Admin A</td>
-				<td>Verified</td>
-			</tr>
-			<tr>
-				<td>08:10</td>
-				<td>Hotspot updated</td>
-				<td>Maluko</td>
-				<td>Admin B</td>
-				<td>Updated</td>
-			</tr>
-			<tr>
-				<td>Yesterday</td>
-				<td>User role changed</td>
-				<td>System</td>
-				<td>Super Admin</td>
-				<td>Completed</td>
-			</tr>
-		</tbody>
-	</table>
+	
+	@php
+		$recentActivity = \App\Models\Pin::where('status', '!=', 'pending')
+			->orderBy('updated_at', 'desc')
+			->take(5)
+			->get();
+	@endphp
+
+	@if($recentActivity->isEmpty())
+		<div style="text-align:center; padding: 24px; color:#7aada0; font-size:14px;">
+			No recent moderation actions recorded.
+		</div>
+	@else
+		<table class="page-table">
+			<thead>
+				<tr>
+					<th>Time</th>
+					<th>Action</th>
+					<th>Pin Name / Type</th>
+					<th>Submitted By</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($recentActivity as $pin)
+				<tr>
+					<td style="color:#7aada0; font-size:12px; white-space:nowrap;">{{ $pin->updated_at->diffForHumans() }}</td>
+					<td>
+						@if($pin->status === 'verified')
+							✔ Report Approved
+						@else
+							✘ Report Rejected
+						@endif
+					</td>
+					<td>
+						<strong style="color:#1b1b1b;">{{ $pin->name }}</strong><br>
+						<span style="font-size:12px; color:#55706a; text-transform:uppercase;">{{ $pin->type }}</span>
+					</td>
+					<td style="font-size:13px;">{{ $pin->user->name ?? 'Anonymous' }}</td>
+					<td>
+						@if($pin->status === 'verified')
+							<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; background:#e7fbf5; color:#0b6d5a;">VERIFIED</span>
+						@else
+							<span style="display:inline-block; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; background:#fdf0ee; color:#c0392b;">REJECTED</span>
+						@endif
+					</td>
+				</tr>
+				@endforeach
+			</tbody>
+		</table>
+	@endif
 </section>
 @endsection
 
@@ -136,75 +153,15 @@
 			return;
 		}
 
-		const savedTagsKey = 'dashboard-location-tags-v1';
-		const fallbackHotspots = [
-			{ lat: 8.372673, lng: 124.849266, tagType: 'Dumping Site', note: 'Dicklum', timestamp: Date.now() - 3600000 },
-			{ lat: 8.352661, lng: 124.813459, tagType: 'Contaminated Water', note: 'Damilag', timestamp: Date.now() - 7200000 },
-			{ lat: 8.316145, lng: 124.858090, tagType: 'Blocked Drainage', note: 'Sankanan', timestamp: Date.now() - 10800000 },
-			{ lat: 8.374209, lng: 124.955686, tagType: 'Illegal Burning', note: 'Maluko', timestamp: Date.now() - 14400000 },
-		];
-
-		function getCategoryColor(tagType) {
-			const map = {
-				'High Risk': '#d94848',
-				'Dumping Site': '#a35f00',
-				'Contaminated Water': '#1a6ca8',
-				'Illegal Burning': '#7d3f98',
-				'Blocked Drainage': '#355e3b',
-				'Pin Location': '#0b6d5a',
-			};
-			return map[tagType] || '#5f5f5f';
-		}
-
-		function loadHotspotData() {
-			try {
-				const parsed = JSON.parse(localStorage.getItem(savedTagsKey) || '[]');
-				const valid = Array.isArray(parsed)
-					? parsed.filter((entry) => Number.isFinite(entry.lat) && Number.isFinite(entry.lng))
-					: [];
-				return valid.length ? valid : fallbackHotspots;
-			} catch {
-				return fallbackHotspots;
-			}
-		}
-
-		function buildQueue(items) {
-			if (!queueEl) {
-				return;
-			}
-
-			const sorted = [...items]
-				.sort((a, b) => Number(b.timestamp || 0) - Number(a.timestamp || 0))
-				.slice(0, 5);
-
-			if (!sorted.length) {
-				queueEl.innerHTML = '<div class="list-item"><strong>No hotspots yet</strong><span>Tagged locations will appear here.</span></div>';
-				return;
-			}
-
-			queueEl.innerHTML = sorted.map((item) => {
-				const when = new Date(Number(item.timestamp || Date.now())).toLocaleString();
-				const note = item.note ? String(item.note) : 'No note';
-				const type = String(item.tagType || 'Other');
-				return `
-					<div class="list-item">
-						<strong>${type} - ${note}</strong>
-						<span>${when}</span>
-					</div>
-				`;
-			}).join('');
-		}
-
 		const map = L.map(mapEl, { zoomControl: true }).setView([8.3698, 124.8645], 12);
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 19,
 			attribution: '&copy; OpenStreetMap contributors',
 		}).addTo(map);
 
-		const hotspots = loadHotspotData();
 		const bounds = [];
 
-		// Always ALSO load real verified pins from the server
+		// Load only real verified pins from the server map endpoint
 		fetch('/api/pins')
 			.then(res => res.json())
 			.then(pins => {
@@ -216,13 +173,28 @@
 						'flood':    '#355e3b',
 						'hotspot':  '#7d3f98',
 					};
-					const color = dbTypeColorMap[pin.type] || '#5f5f5f';
-					L.circleMarker([pin.latitude, pin.longitude], {
+					const color = dbTypeColorMap[pin.type] || '#0b6d5a';
+					const marker = L.circleMarker([pin.latitude, pin.longitude], {
 						radius: 7, color: '#fff', fillColor: color, fillOpacity: 1, weight: 2
-					}).addTo(map).bindPopup(`<b>${pin.name}</b><br>${pin.description || ''}<br><small>By: ${pin.user?.name || 'Anonymous'}</small>`);
+					}).addTo(map);
+					
+					marker.bindPopup(`<b>${pin.name}</b><br>${pin.description || ''}<br><small>By: ${pin.user?.name || 'Anonymous'}</small>`);
+					bounds.push([pin.latitude, pin.longitude]);
 				});
+
+				if (bounds.length) {
+					map.fitBounds(bounds, { padding: [24, 24] });
+				}
+
+				if (statusEl) {
+					statusEl.textContent = `Showing ${pins.length} active verified point(s).`;
+				}
 			})
-			.catch(() => {});
+			.catch(() => {
+				if (statusEl) {
+					statusEl.textContent = 'Failed to load hotspot data from server.';
+				}
+			});
 
 		// Load pending from server and put them in the priority queue
 		fetch('/api/pins/pending')
@@ -240,50 +212,7 @@
 					</div>
 				`).join('');
 			})
-			.catch(() => {
-				if (queueEl) buildQueue(hotspots);
-			});
-
-		hotspots.forEach((item) => {
-			const lat = Number(item.lat);
-			const lng = Number(item.lng);
-			const type = String(item.tagType || 'Other');
-			const note = item.note ? String(item.note) : 'No note';
-			const color = getCategoryColor(type);
-
-			const pulse = L.circle([lat, lng], {
-				radius: 250,
-				color,
-				fillColor: color,
-				fillOpacity: 0.22,
-				weight: 2,
-			}).addTo(map);
-
-			const marker = L.circleMarker([lat, lng], {
-				radius: 6,
-				color: '#ffffff',
-				fillColor: color,
-				fillOpacity: 1,
-				weight: 2,
-			}).addTo(map);
-
-			const popupHtml = `<strong>${type}</strong><br>${note}<br><small>${lat.toFixed(6)}, ${lng.toFixed(6)}</small>`;
-			pulse.bindPopup(popupHtml);
-			marker.bindPopup(popupHtml);
-
-			bounds.push([lat, lng]);
-		});
-
-		if (bounds.length) {
-			map.fitBounds(bounds, { padding: [24, 24] });
-		}
-
-		buildQueue(hotspots);
-
-		if (statusEl) {
-			const source = hotspots === fallbackHotspots ? 'demo fallback data' : 'saved user tags';
-			statusEl.textContent = `Showing ${hotspots.length} hotspot point(s) from ${source}.`;
-		}
+			.catch(() => {});
 
 		setTimeout(() => map.invalidateSize(), 0);
 	})();
