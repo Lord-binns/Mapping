@@ -84,18 +84,22 @@ Set these variables in your Render Web Service:
 - `APP_ENV=production`
 - `APP_DEBUG=false`
 - `APP_URL=https://<your-render-service>.onrender.com`
+- `ASSET_URL=https://<your-render-service>.onrender.com`
 - `APP_KEY=<output of: php artisan key:generate --show>`
-- `DB_CONNECTION=pgsql`
-- `DB_HOST=<from Render PostgreSQL service>`
-- `DB_PORT=5432`
-- `DB_DATABASE=<from Render PostgreSQL service>`
-- `DB_USERNAME=<from Render PostgreSQL service>`
-- `DB_PASSWORD=<from Render PostgreSQL service>`
-- `SESSION_DRIVER=file`
-- `CACHE_STORE=file`
-- `QUEUE_CONNECTION=sync`
+- `DB_CONNECTION=<mysql|pgsql>`
+- `DB_HOST=<from your database service>`
+- `DB_PORT=<database port>`
+- `DB_DATABASE=<database name>`
+- `DB_USERNAME=<database user>`
+- `DB_PASSWORD=<database password>`
+- `SESSION_DRIVER=database`
+- `SESSION_SECURE_COOKIE=true`
+- `CACHE_STORE=database`
+- `QUEUE_CONNECTION=database`
 
-The startup script runs `php artisan migrate --force` before starting the app.
+The startup script clears optimized caches and then runs migrations before starting the app.
+
+If your app sits behind Render's proxy/SSL terminator, keep `APP_URL` and `ASSET_URL` as `https://...` to avoid mixed-content errors.
 
 ### 3. Deploy
 
