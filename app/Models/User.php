@@ -47,4 +47,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get pins created by the user.
+     */
+    public function pins()
+    {
+        return $this->hasMany(Pin::class);
+    }
 }
+

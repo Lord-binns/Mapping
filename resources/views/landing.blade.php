@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Clean Earth Interactive Mapping</title>
+<title>Clean Earth Interactive Mapping</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         body {
             padding: 0;
@@ -679,7 +681,7 @@
                     <canvas id="globe-3d"></canvas>
                     <div class="info"><span></span></div>
                 </div>
-                <p class="globe-label"> "Earth" Our one and only home</p>
+                <p class="globe-label">Interactive globe — hover to explore countries</p>
             </div>
         </div>
 {{--  
@@ -749,22 +751,14 @@
     <svg id="country" viewBox="0 0 1010 666"></svg>
 
     <script>
+        // Carousel
         const slider = document.getElementById('carousel-slider');
         const carouselBtns = document.querySelectorAll('.carousel-btn');
-
-        function activateCarousel(e) {
+        carouselBtns.forEach(btn => btn.addEventListener('click', e => {
             const items = document.querySelectorAll('.slider .item');
-            if (e.target.matches('.next')) {
-                slider.appendChild(items[0]);
-            }
-            if (e.target.matches('.prev')) {
-                slider.insertBefore(items[items.length - 1], items[0]);
-            }
-        }
-
-        carouselBtns.forEach(btn => {
-            btn.addEventListener('click', activateCarousel);
-        });
+            if (e.target.matches('.next')) slider.appendChild(items[0]);
+            if (e.target.matches('.prev')) slider.insertBefore(items[items.length - 1], items[0]);
+        }));
     </script>
 </body>
 </html>

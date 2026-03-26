@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\PinController as AdminPinController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,4 +36,12 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::view('/hotspots', 'admin.hotspots')->name('hotspots');
     Route::view('/users', 'admin.users')->name('users');
     Route::view('/settings', 'admin.settings')->name('settings');
+    Route::resource('pins', AdminPinController::class);
+    Route::patch('/pins/{pin}/verify', [AdminPinController::class, 'verify'])->name('pins.verify');
+    Route::patch('/pins/{pin}/reject', [AdminPinController::class, 'reject'])->name('pins.reject');
 });
+Route::get('/api/pins', function () {
+    return response()->json(\App\Models\Pin::where('status', 'verified')->with('user:id,name')->get());
+});
+
+Route::post('/pins', [\App\Http\Controllers\PinController::class, 'store'])->name('pins.store');

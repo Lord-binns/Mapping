@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard | Clean Earth Interactive Mapping</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link
@@ -1110,7 +1111,18 @@
             }
         }
 
-        function createLocationTag() {
+        // Map tag-type labels to the DB enum values accepted by the backend
+        const tagTypeToDbType = {
+            'Pin Location': 'incident',
+            'High Risk': 'hotspot',
+            'Dumping Site': 'dumping',
+            'Contaminated Water': 'water',
+            'Illegal Burning': 'incident',
+            'Blocked Drainage': 'flood',
+            'Other': 'incident',
+        };
+
+        async function createLocationTag() {
             if (!currentPosition) {
                 tagStatusEl.textContent = 'Current location not ready. Allow location access first.';
                 return;
@@ -1124,11 +1136,63 @@
                 return;
             }
 
-            addTagMarker(currentPosition.lat, currentPosition.lng, selectedType, noteValue);
-            saveTags();
+            const dbType = tagTypeToDbType[selectedType] || 'incident';
 
-            tagStatusEl.textContent = `${selectedType} tag added at the locator pin position.`;
-            tagNoteEl.value = '';
+            tagStatusEl.textContent = 'Submitting tag for admin approval...';
+            addTagBtn.disabled = true;
+
+            try {
+                // Get CSRF token
+                let csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+                if (!csrf) {
+                    const meta = document.createElement('meta');
+                    meta.name = 'csrf-token';
+                    meta.content = '{{ csrf_token() }}';
+                    document.head.appendChild(meta);
+                    csrf = meta.content;
+                }
+
+                const formData = new FormData();
+                formData.append('name', selectedType + (noteValue ? ': ' + noteValue : ''));
+                formData.append('description', noteValue || selectedType);
+                formData.append('latitude', currentPosition.lat);
+                formData.append('longitude', currentPosition.lng);
+                formData.append('type', dbType);
+
+                const response = await fetch('/pins', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-CSRF-TOKEN': csrf },
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    tagStatusEl.textContent = `✅ "${selectedType}" tag submitted! It will appear on the map once an admin approves it.`;
+                    tagNoteEl.value = '';
+                    tagTypeEl.value = '';
+
+                    // Show a temporary pending marker so user knows where they tagged
+                    const pendingIcon = L.divIcon({
+                        className: 'tag-icon-wrapper',
+                        html: `<span class="tag-pin" style="background:#ffc107;border-color:#888;" title="Pending approval"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 9v5"/><circle cx="12" cy="17" r="1"/></svg></span>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15],
+                        popupAnchor: [0, -12],
+                    });
+                    L.marker([currentPosition.lat, currentPosition.lng], { icon: pendingIcon })
+                        .addTo(map)
+                        .bindPopup(`<b>${selectedType}</b><br><small style="color:#e67e00">⏳ Pending admin approval</small>`)
+                        .openPopup();
+                } else {
+                    tagStatusEl.textContent = '❌ Error: ' + (data.message || 'Could not submit. Try again.');
+                }
+            } catch (err) {
+                tagStatusEl.textContent = '❌ Network error. Please try again.';
+                console.error(err);
+            } finally {
+                addTagBtn.disabled = false;
+            }
         }
 
         function clearLocationTags() {
@@ -1608,6 +1672,28 @@
         resetBarangaySelect(citySelectEl.value);
 
         loadSavedTags();
+
+        // Load admin-approved pins from the server and show them on the map
+        fetch('/api/pins')
+            .then(res => res.json())
+            .then(pins => {
+                pins.forEach(pin => {
+                    const style = getTagStyle(
+                        Object.keys(tagTypeToDbType).find(k => tagTypeToDbType[k] === pin.type) || 'Other'
+                    );
+                    const icon = L.divIcon({
+                        className: 'tag-icon-wrapper',
+                        html: `<span class="tag-pin ${style.className}" title="${pin.type}">${style.icon}</span>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15],
+                        popupAnchor: [0, -12],
+                    });
+                    L.marker([pin.latitude, pin.longitude], { icon })
+                        .addTo(map)
+                        .bindPopup(`<b>${pin.name}</b><br>${pin.description || ''}<br><small>By: ${pin.user?.name || 'Anonymous'}</small>`);
+                });
+            })
+            .catch(err => console.warn('Could not load approved pins:', err));
 
         map.whenReady(refreshMapSize);
         window.addEventListener('load', refreshMapSize);
