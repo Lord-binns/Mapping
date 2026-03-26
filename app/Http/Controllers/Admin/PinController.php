@@ -76,13 +76,13 @@ class PinController extends Controller
     public function verify(Pin $pin)
     {
         $pin->update(['status' => 'verified']);
-        return redirect()->route('admin.pins.index')->with('success', 'Pin approved and is now visible on the map.');
+        return redirect()->route('admin.reports')->with('success', 'Pin approved and is now visible on the map.');
     }
 
     public function reject(Pin $pin)
     {
         $pin->update(['status' => 'resolved']);
-        return redirect()->route('admin.pins.index')->with('success', 'Pin has been rejected.');
+        return redirect()->route('admin.reports')->with('success', 'Pin has been rejected.');
     }
 
     public function destroy(Pin $pin)

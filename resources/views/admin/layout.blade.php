@@ -357,7 +357,7 @@
                 <a class="{{ request()->routeIs('admin.hotspots') ? 'is-active' : '' }}" href="{{ route('admin.hotspots') }}">Hotspots</a>
                 <a class="{{ request()->routeIs('admin.users') ? 'is-active' : '' }}" href="{{ route('admin.users') }}">Users</a>
                 <a class="{{ request()->routeIs('admin.settings') ? 'is-active' : '' }}" href="{{ route('admin.settings') }}">Settings</a>
-                <a class="back-link" href="{{ url('/') }}">Back to Site</a>
+              
                 <form action="{{ route('logout') }}" method="post">
                     @csrf
                     <button class="back-link-button" type="submit">Log Out</button>
