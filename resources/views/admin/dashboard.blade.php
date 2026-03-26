@@ -45,20 +45,20 @@
 	<article class="panel">
 		<h3>Total Reports</h3>
 		<p>All submissions in the system.</p>
-		<div class="kpi-value">164</div>
-		<span class="kpi-trend">+12 this week</span>
+		<div class="kpi-value">{{ \App\Models\Pin::count() }}</div>
+		<span class="kpi-trend">{{ \App\Models\Pin::where('status','pending')->count() }} pending</span>
 	</article>
 	<article class="panel">
 		<h3>Open Incidents</h3>
 		<p>Reports requiring immediate validation.</p>
-		<div class="kpi-value">27</div>
-		<span class="kpi-trend">9 high-priority</span>
+		<div class="kpi-value" style="color:#e67e00">{{ \App\Models\Pin::where('status','pending')->count() }}</div>
+		<span class="kpi-trend"><a href="{{ route('admin.reports') }}">Review now →</a></span>
 	</article>
 	<article class="panel">
 		<h3>Active Users</h3>
 		<p>Contributors active in the last 7 days.</p>
-		<div class="kpi-value">58</div>
-		<span class="kpi-trend">+7 this week</span>
+		<div class="kpi-value">{{ \App\Models\User::count() }}</div>
+		<span class="kpi-trend">{{ \App\Models\Pin::where('status','verified')->count() }} verified pins</span>
 	</article>
 </section>
 
@@ -72,13 +72,8 @@
 
 	<article class="panel">
 		<h3>Priority Queue</h3>
-		<p>Latest items that need admin review.</p>
-		<div id="hotspot-queue" class="list-stack">
-			<div class="list-item">
-				<strong>Preparing queue...</strong>
-				<span>Hotspots will be listed once map data is loaded.</span>
-			</div>
-		</div>
+		<p>Latest pending pin requests awaiting your review. <a href="{{ route('admin.reports') }}">View all →</a></p>
+		<div id="hotspot-queue" class="list-stack"></div>
 	</article>
 </section>
 
@@ -208,6 +203,46 @@
 
 		const hotspots = loadHotspotData();
 		const bounds = [];
+
+		// Always ALSO load real verified pins from the server
+		fetch('/api/pins')
+			.then(res => res.json())
+			.then(pins => {
+				pins.forEach(pin => {
+					const dbTypeColorMap = {
+						'incident': '#d94848',
+						'dumping':  '#a35f00',
+						'water':    '#1a6ca8',
+						'flood':    '#355e3b',
+						'hotspot':  '#7d3f98',
+					};
+					const color = dbTypeColorMap[pin.type] || '#5f5f5f';
+					L.circleMarker([pin.latitude, pin.longitude], {
+						radius: 7, color: '#fff', fillColor: color, fillOpacity: 1, weight: 2
+					}).addTo(map).bindPopup(`<b>${pin.name}</b><br>${pin.description || ''}<br><small>By: ${pin.user?.name || 'Anonymous'}</small>`);
+				});
+			})
+			.catch(() => {});
+
+		// Load pending from server and put them in the priority queue
+		fetch('/api/pins/pending')
+			.then(res => res.json())
+			.then(pending => {
+				if (!queueEl) return;
+				if (!pending.length) {
+					queueEl.innerHTML = '<div class="list-item"><strong>No pending reports</strong><span>All caught up!</span></div>';
+					return;
+				}
+				queueEl.innerHTML = pending.slice(0, 5).map(pin => `
+					<div class="list-item" style="border-left:3px solid #ffc107;padding-left:8px;">
+						<strong>⏳ ${pin.name}</strong>
+						<span>${pin.type} &mdash; by ${pin.user?.name || 'Anonymous'} &mdash; <a href="/admin/reports">Review</a></span>
+					</div>
+				`).join('');
+			})
+			.catch(() => {
+				if (queueEl) buildQueue(hotspots);
+			});
 
 		hotspots.forEach((item) => {
 			const lat = Number(item.lat);

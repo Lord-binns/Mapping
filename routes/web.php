@@ -32,7 +32,7 @@ Route::get('/dashboard', function () {
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
-    Route::view('/reports', 'admin.reports')->name('reports');
+    Route::get('/reports', [\App\Http\Controllers\Admin\PinController::class, 'reports'])->name('reports');
     Route::view('/hotspots', 'admin.hotspots')->name('hotspots');
     Route::view('/users', 'admin.users')->name('users');
     Route::view('/settings', 'admin.settings')->name('settings');
@@ -42,6 +42,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 });
 Route::get('/api/pins', function () {
     return response()->json(\App\Models\Pin::where('status', 'verified')->with('user:id,name')->get());
+});
+
+Route::get('/api/pins/pending', function () {
+    return response()->json(\App\Models\Pin::where('status', 'pending')->with('user:id,name')->latest()->get());
 });
 
 Route::post('/pins', [\App\Http\Controllers\PinController::class, 'store'])->name('pins.store');

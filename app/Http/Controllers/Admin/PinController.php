@@ -14,6 +14,14 @@ class PinController extends Controller
         return view('admin.pins', compact('pins'));
     }
 
+    public function reports()
+    {
+        $pending  = Pin::with('user')->where('status', 'pending')->latest()->get();
+        $verified = Pin::with('user')->where('status', 'verified')->latest()->get();
+        $resolved = Pin::with('user')->where('status', 'resolved')->latest()->get();
+        return view('admin.reports', compact('pending', 'verified', 'resolved'));
+    }
+
     public function create()
     {
         return view('admin.pins-create');
