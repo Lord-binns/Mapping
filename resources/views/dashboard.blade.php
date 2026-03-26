@@ -635,11 +635,6 @@
     </style>
 </head>
 <body>
-    <a class="btn temp-switch-fab" href="{{ route('admin.dashboard') }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8" stroke-linecap="round"/><path d="M10 20V4" stroke-linecap="round"/><path d="M16 20v-6" stroke-linecap="round"/><path d="M3 20h18" stroke-linecap="round"/></svg>
-        Admin (Temp)
-    </a>
-
     <header class="navbar">
         <div class="brand">
             <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
