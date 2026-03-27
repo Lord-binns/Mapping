@@ -1168,12 +1168,28 @@
                 const response = await fetch('/pins', {
                     method: 'POST',
                     body: formData,
-                    headers: { 'X-CSRF-TOKEN': csrf },
+                    headers: { 
+                        'X-CSRF-TOKEN': csrf,
+                        'Accept': 'application/json'
+                    },
                 });
 
-                const data = await response.json();
+                if (response.status === 413) {
+                    tagStatusEl.textContent = '❌ Error: The image file is way too big (server rejected).';
+                    addTagBtn.disabled = false;
+                    return;
+                }
 
-                if (data.success) {
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    tagStatusEl.textContent = '❌ Server returned an invalid response (might be a file size issue).';
+                    addTagBtn.disabled = false;
+                    return;
+                }
+
+                if (response.ok && data.success) {
                     tagStatusEl.textContent = `✅ "${selectedType}" tag submitted! It will appear on the map once an admin approves it.`;
                     tagNoteEl.value = '';
                     tagTypeEl.value = '';
@@ -1193,10 +1209,14 @@
                         .bindPopup(`<b>${selectedType}</b><br><small style="color:#e67e00">⏳ Pending admin approval</small>`)
                         .openPopup();
                 } else {
-                    tagStatusEl.textContent = '❌ Error: ' + (data.message || 'Could not submit. Try again.');
+                    let errorMessage = data.message || 'Could not submit. Try again.';
+                    if (data.errors) {
+                        errorMessage = Object.values(data.errors).flat().join(' ');
+                    }
+                    tagStatusEl.textContent = '❌ Error: ' + errorMessage;
                 }
             } catch (err) {
-                tagStatusEl.textContent = '❌ Network error. Please try again.';
+                tagStatusEl.textContent = '❌ Network error. Check your connection or the file size.';
                 console.error(err);
             } finally {
                 addTagBtn.disabled = false;
