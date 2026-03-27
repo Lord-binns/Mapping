@@ -15,6 +15,7 @@ class PinController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'type' => 'required|in:incident,dumping,flood,water,hotspot',
+            'barangay' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:5120', // Up to 5MB image
         ]);
 

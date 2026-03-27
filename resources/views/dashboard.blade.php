@@ -1153,12 +1153,45 @@
                     csrf = meta.content;
                 }
 
+                // Reverse geocode to get barangay
+                let detectedBarangay = '';
+                try {
+                    tagStatusEl.textContent = 'Detecting barangay location...';
+                    const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentPosition.lat}&lon=${currentPosition.lng}&zoom=14`);
+                    if (geoRes.ok) {
+                        const geoData = await geoRes.json();
+                        const address = geoData.address || {};
+                        detectedBarangay = address.village || address.suburb || address.neighbourhood || address.quarter || '';
+                        
+                        // Clean up "Barangay " prefix if nominatim returned it
+                        detectedBarangay = detectedBarangay.replace(/^Barangay\s+/i, '').trim();
+                    }
+                } catch (e) {
+                    console.warn('Could not reverse geocode barangay', e);
+                }
+
+                // Fallback to the dropdown if reverse geocode failed
+                if (!detectedBarangay) {
+                    const bSelect = document.getElementById('barangay-select');
+                    if (bSelect && !bSelect.disabled && bSelect.value) {
+                        const text = bSelect.options[bSelect.selectedIndex].text;
+                        if (text && text !== 'Choose Barangay') {
+                            detectedBarangay = text;
+                        }
+                    }
+                }
+
+                tagStatusEl.textContent = 'Submitting tag for admin approval...';
+
                 const formData = new FormData();
                 formData.append('name', selectedType + (noteValue ? ': ' + noteValue : ''));
                 formData.append('description', noteValue || selectedType);
                 formData.append('latitude', currentPosition.lat);
                 formData.append('longitude', currentPosition.lng);
                 formData.append('type', dbType);
+                if (detectedBarangay) {
+                    formData.append('barangay', detectedBarangay);
+                }
                 
                 const imageInput = document.getElementById('tag-image');
                 if (imageInput && imageInput.files[0]) {

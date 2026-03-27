@@ -17,6 +17,7 @@ class Pin extends Model
         'latitude',
         'longitude',
         'type',
+        'barangay',
         'status',
         'image',
         'is_public',

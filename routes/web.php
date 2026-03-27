@@ -33,6 +33,7 @@ Route::get('/dashboard', function () {
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
     Route::get('/reports', [\App\Http\Controllers\Admin\PinController::class, 'reports'])->name('reports');
+    Route::get('/heatmap', [\App\Http\Controllers\Admin\PinController::class, 'heatmap'])->name('heatmap');
     Route::view('/hotspots', 'admin.hotspots')->name('hotspots');
     Route::view('/users', 'admin.users')->name('users');
     Route::view('/settings', 'admin.settings')->name('settings');

@@ -22,6 +22,15 @@ class PinController extends Controller
         return view('admin.reports', compact('pending', 'verified', 'resolved'));
     }
 
+    public function heatmap()
+    {
+        $pins = Pin::select('id', 'latitude', 'longitude', 'type')
+            ->where('status', 'verified')
+            ->get();
+
+        return view('admin.heatmap', compact('pins'));
+    }
+
     public function create()
     {
         return view('admin.pins-create');
