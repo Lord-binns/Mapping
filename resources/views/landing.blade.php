@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Clean Earth Interactive Mapping</title>
+    <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -42,11 +42,17 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
             color: #0b6d5a;
-            font-size: 28px;
-            white-space: nowrap;
+            font-size: clamp(16px, 1.8vw, 28px);
+            white-space: normal;
+            line-height: 1.35;
+            max-width: min(780px, 56vw);
             display: inline-flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .brand span {
+            display: inline-block;
         }
 
         .brand-logo {
@@ -274,14 +280,17 @@
 
         .footer {
             position: relative;
-            height: 34px;
+            min-height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 0.88);
             border-top: 1px solid #d9d9d9;
             color: #3c3c3c;
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 1.45;
+            text-align: center;
+            padding: 8px 12px;
             letter-spacing: 0.04em;
             text-transform: uppercase;
             z-index: 20;
@@ -632,14 +641,14 @@
     <header class="navbar">
         <div class="brand">
             <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
-            <span>Clean Earth Interactive Mapping</span>
+            <span>ENVIROTRACK: Smart Mapping</span>
         </div>
         <nav class="main-nav" aria-label="Main navigation">
             <a class="nav-link" href="#home">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Home
             </a>
-            <a class="nav-link" href="#about">
+            <a class="nav-link" href="{{ route('about') }}">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="7.5" r="3" stroke="currentColor"/><path d="M5 20c.7-3.1 3.4-5 7-5s6.3 1.9 7 5" stroke="currentColor" stroke-linecap="round"/></svg>
                 About Us
             </a>
@@ -740,10 +749,18 @@
             </nav>
         </div>
 
+        <section class="section-lite" id="contact" aria-label="Contact">
+            <h2>Contact</h2>
+            <p>
+                For official coordination and incident verification workflows, please connect with DENR CDO and your barangay environment offices.
+                ENVIROTRACK is designed to support agency-community collaboration for cleaner and safer local environments.
+            </p>
+        </section>
+
         
     </main>
 
-    <footer class="footer">Clean Earth Interactive Mapping</footer>
+    <footer class="footer">ENVIROTRACK: AN AGILE-BASED MAPPING SYSTEM FOR REAL-TIME REPORTING OF POLLUTION AND ENVIRONMENTAL VIOLATIONS</footer>
 
     <svg id="map" viewBox="0 0 1010 666"></svg>
     <svg id="country" viewBox="0 0 1010 666"></svg>

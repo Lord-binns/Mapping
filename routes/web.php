@@ -8,6 +8,8 @@ Route::get('/', function () {
     return view('landing');
 });
 
+Route::view('/about', 'about')->name('about');
+
 Route::middleware('guest')->group(function () {
     Route::view('/login', 'login')->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');

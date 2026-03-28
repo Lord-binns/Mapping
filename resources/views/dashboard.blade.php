@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard | Clean Earth Interactive Mapping</title>
+    <title>Dashboard | {{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link
         rel="stylesheet"
@@ -77,11 +77,17 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
             color: #0b6d5a;
-            font-size: 28px;
-            white-space: nowrap;
+            font-size: clamp(11px, 1vw, 14px);
+            white-space: normal;
+            line-height: 1.35;
+            max-width: min(760px, 60vw);
             display: inline-flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .brand span {
+            display: inline-block;
         }
 
         .brand-logo {
@@ -639,7 +645,7 @@
     <header class="navbar">
         <div class="brand">
             <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
-            <span>Clean Earth Interactive Mapping</span>
+            <span>{{ config('app.name') }}</span>
         </div>
         <span class="topbar-note">Dashboard</span>
     </header>

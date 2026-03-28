@@ -28,7 +28,7 @@ class PinController extends Controller
             ->where('status', 'verified')
             ->get();
 
-        return view('admin.heatmap', compact('pins'));
+        return view('admin.hotspots', compact('pins'));
     }
 
     public function create()

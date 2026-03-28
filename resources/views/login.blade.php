@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login | Clean Earth Interactive Mapping</title>
+    <title>Login | {{ config('app.name') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -149,7 +149,7 @@
         @csrf
         <fieldset>
             <h2 class="fs-title">Login</h2>
-            <h3 class="fs-subtitle">Access your Clean Earth Interactive Mapping dashboard</h3>
+            <h3 class="fs-subtitle">Access your {{ config('app.name') }} dashboard</h3>
             @if ($errors->any())
                 <p class="form-error">{{ $errors->first() }}</p>
             @endif
