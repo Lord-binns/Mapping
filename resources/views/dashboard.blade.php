@@ -528,22 +528,34 @@
             display: none;
         }
 
-        .notification-panel {
-            margin: 10px auto 0;
-            width: min(980px, 100%);
+        .notification-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(500px, 90vw);
+            max-height: 70vh;
             background: #ffffff;
             border: 1px solid #d9ebe6;
             border-radius: 12px;
-            box-shadow: 0 10px 24px rgba(0, 121, 101, 0.1);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
             overflow: hidden;
+            z-index: 100;
+            padding: 0;
         }
 
-        .notification-panel[hidden] {
-            display: none;
+        .notification-modal::backdrop {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
         }
 
-        .notification-panel-head {
-            padding: 10px 12px;
+        .notification-modal[open] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notification-modal-head {
+            padding: 16px;
             border-bottom: 1px solid #e2f1ed;
             background: #f7fffc;
             color: #0b6d5a;
@@ -551,18 +563,41 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-modal-close {
+            background: none;
+            border: none;
+            color: #0b6d5a;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .notification-modal-close:hover {
+            color: #00c9a2;
         }
 
         .notification-list {
             list-style: none;
             margin: 0;
             padding: 0;
-            max-height: 280px;
+            max-height: 400px;
             overflow-y: auto;
+            flex: 1;
         }
 
         .notification-item {
-            padding: 10px 12px;
+            padding: 12px 16px;
             border-bottom: 1px solid #edf6f3;
         }
 
@@ -603,9 +638,10 @@
         }
 
         .notification-empty {
-            padding: 14px 12px;
+            padding: 24px 16px;
             color: #55706a;
             font-size: 12px;
+            text-align: center;
         }
 
         h1 {
@@ -826,10 +862,10 @@
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 19h10" stroke-linecap="round"/></svg>
                                 Reports
                             </button>
-                            <button type="button" class="btn alt notification">
+                            <button id="notification-btn" type="button" class="btn alt notification">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
                                 Notifications
-                                <span class="notification-dot" aria-hidden="true"></span>
+                                <span id="notification-dot" class="notification-dot" aria-hidden="true" hidden></span>
                             </button>
                             <button type="button" class="btn">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" stroke-linecap="round"/><path d="M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h14" stroke-linecap="round"/></svg>
@@ -837,6 +873,16 @@
                             </button>
                         </div>
                     </section>
+
+                    <dialog id="notification-modal" class="notification-modal">
+                        <div class="notification-modal-head">
+                            <span>Your Pin Updates</span>
+                            <button class="notification-modal-close" type="button" aria-label="Close notifications" xmlns="http://www.w3.org/2000/svg">&times;</button>
+                        </div>
+                        <ul id="notification-list" class="notification-list">
+                            <li class="notification-empty">Loading notifications...</li>
+                        </ul>
+                    </dialog>
 
                     <section class="map-card" aria-label="Live map">
                         <div id="map"></div>
@@ -868,7 +914,15 @@
         const barangaySelectWrapEl = document.getElementById('barangay-select-wrap');
         const barangaySelectEl = document.getElementById('barangay-select');
         const cityStatusEl = document.getElementById('city-status');
+        const notificationBtnEl = document.getElementById('notification-btn');
+        const notificationDotEl = document.getElementById('notification-dot');
+        const notificationModalEl = document.getElementById('notification-modal');
+        const notificationModalCloseBtn = document.querySelector('.notification-modal-close');
+        const notificationListEl = document.getElementById('notification-list');
         const savedTagsKey = 'dashboard-location-tags-v1';
+        const currentUserId = {{ auth()->id() ?? 0 }};
+        const notificationSeenKey = `dashboard-notification-last-seen-${currentUserId}`;
+        let pinNotifications = [];
 
         const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -1222,6 +1276,101 @@
             'Blocked Drainage': 'flood',
             'Other': 'incident',
         };
+
+        function formatNotificationTime(timestamp) {
+            const parsed = new Date(timestamp);
+            if (Number.isNaN(parsed.getTime())) {
+                return '';
+            }
+
+            return parsed.toLocaleString();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function getLastSeenNotificationTimestamp() {
+            return localStorage.getItem(notificationSeenKey) || '';
+        }
+
+        function renderNotifications() {
+            if (!notificationListEl) {
+                return;
+            }
+
+            if (!pinNotifications.length) {
+                notificationListEl.innerHTML = '<li class="notification-empty">No updates yet. Your approved or declined pins will appear here.</li>';
+                return;
+            }
+
+            notificationListEl.innerHTML = pinNotifications.map((item) => {
+                const isApproved = item.status === 'verified';
+                const statusText = isApproved ? 'Approved' : 'Declined';
+                const statusClass = isApproved ? 'is-approved' : 'is-declined';
+                const commentHtml = !isApproved && item.rejection_comment
+                    ? `<br><span>Comment: ${escapeHtml(item.rejection_comment)}</span>`
+                    : '';
+
+                return `
+                    <li class="notification-item">
+                        <p class="notification-item-title">${escapeHtml(item.name)}</p>
+                        <p class="notification-item-meta">
+                            <span class="notification-item-status ${statusClass}">${statusText}</span>
+                            <span>${formatNotificationTime(item.updated_at)}</span>${commentHtml}
+                        </p>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function updateNotificationBadge() {
+            if (!notificationDotEl) {
+                return;
+            }
+
+            const lastSeen = getLastSeenNotificationTimestamp();
+            const hasUnread = pinNotifications.some((item) => String(item.updated_at || '') > String(lastSeen));
+            notificationDotEl.hidden = !hasUnread;
+        }
+
+        function markNotificationsAsSeen() {
+            if (!pinNotifications.length) {
+                return;
+            }
+
+            localStorage.setItem(notificationSeenKey, pinNotifications[0].updated_at || '');
+            updateNotificationBadge();
+        }
+
+        async function loadPinNotifications() {
+            try {
+                const response = await fetch('/api/my-pin-notifications', {
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Notification request failed with ${response.status}`);
+                }
+
+                const data = await response.json();
+                pinNotifications = Array.isArray(data) ? data : [];
+                renderNotifications();
+                updateNotificationBadge();
+            } catch (error) {
+                if (notificationListEl) {
+                    notificationListEl.innerHTML = '<li class="notification-empty">Could not load notifications right now.</li>';
+                }
+                console.warn('Failed to load notifications:', error);
+            }
+        }
 
         async function createLocationTag() {
             if (!currentPosition) {
@@ -1831,6 +1980,28 @@
         });
 
         resetBarangaySelect(citySelectEl.value);
+
+        if (notificationBtnEl && notificationModalEl) {
+            notificationBtnEl.addEventListener('click', () => {
+                notificationModalEl.showModal();
+                markNotificationsAsSeen();
+            });
+
+            notificationModalCloseBtn.addEventListener('click', () => {
+                notificationModalEl.close();
+            });
+
+            notificationModalEl.addEventListener('click', (e) => {
+                const dialogDimensions = notificationModalEl.getBoundingClientRect();
+                if (e.clientX < dialogDimensions.left || e.clientX > dialogDimensions.right ||
+                    e.clientY < dialogDimensions.top || e.clientY > dialogDimensions.bottom) {
+                    notificationModalEl.close();
+                }
+            });
+        }
+
+        loadPinNotifications();
+        window.setInterval(loadPinNotifications, 20000);
 
         loadSavedTags();
 
