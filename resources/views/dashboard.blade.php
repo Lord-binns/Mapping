@@ -1006,6 +1006,11 @@
                 ticala: [8.340169, 124.892535],
                 alae: [8.422600, 124.814258],
             },
+            'cagayan-de-oro': {
+                patag: [8.487297, 124.627243],
+                concolasion: [8.490013, 124.646803],
+                kauswagan: [8.498858, 124.638520],
+            },
         };
 
         function setCityStatus(message) {
