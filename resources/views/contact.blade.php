@@ -35,8 +35,16 @@
 			justify-content: space-between;
 			gap: 18px;
 			padding: 16px 24px;
-			z-index: 20;
+			z-index: 2000;
 			backdrop-filter: blur(6px);
+		}
+
+		/* Keep Leaflet map layers below the fixed navbar */
+		.leaflet-pane,
+		.leaflet-control,
+		.leaflet-top,
+		.leaflet-bottom {
+			z-index: 500;
 		}
 
 		.brand {
@@ -186,6 +194,28 @@
 		.contact-card ul {
 			margin: 0;
 			padding-left: 18px;
+		}
+
+		.card-muted {
+			font-size: 12px;
+			color: #5e6f6a;
+			margin-top: 8px;
+		}
+
+		.hours-grid {
+			display: grid;
+			grid-template-columns: 1.1fr 1fr;
+			gap: 8px 14px;
+			margin-top: 6px;
+		}
+
+		.hours-day {
+			font-weight: 700;
+			color: #2f4f47;
+		}
+
+		.hours-time {
+			color: #3f3f3f;
 		}
 
 		.contact-link {
@@ -378,34 +408,7 @@
 			<div id="coords" class="coords">Latitude: 8.497171 | Longitude: 124.659870</div>
 		</section>
 
-		<section class="contact-grid" aria-label="Contact channels and office details">
-			<article class="contact-card">
-				<h2>Email Support</h2>
-				<p>For report follow-ups, technical concerns, and account-related inquiries.</p>
-				<a class="contact-link" href="mailto:support@envirotrack.ph">support@envirotrack.ph</a>
-			</article>
-
-			<article class="contact-card">
-				<h2>Phone and Hotline</h2>
-				<p>For urgent incidents and immediate coordination.</p>
-				<ul>
-					<li>Mobile: +63 917 123 4567</li>
-					<li>Landline: (088) 123 4567</li>
-					<li>Emergency Desk: +63 998 555 1010</li>
-				</ul>
-			</article>
-
-			<article class="contact-card">
-				<h2>Office Hours</h2>
-				<ul>
-					<li>Monday to Friday: 8:00 AM to 5:00 PM</li>
-					<li>Saturday: 8:00 AM to 12:00 PM</li>
-					<li>Sunday and holidays: On-call team only</li>
-				</ul>
-			</article>
-		</section>
-
-		<section class="contact-grid" aria-label="Office location and response details" style="grid-template-columns: 2fr 1fr;">
+		<section class="contact-grid" aria-label="Office location and response details" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
 			<article class="contact-card">
 				<h2>Main Office</h2>
 				<p>
@@ -423,14 +426,37 @@
 				<a class="contact-link" href="https://r10.denr.gov.ph/" target="_blank" rel="noopener noreferrer">https://r10.denr.gov.ph/</a>
 				<ul>
 					<li>Phone: 0888568780</li>
-					<li>Sunday: Closed</li>
-					<li>Monday: 8 AM - 5 PM</li>
-					<li>Tuesday: 8 AM - 5 PM</li>
-					<li>Wednesday (Holy Wednesday): 8 AM - 5 PM (hours might differ)</li>
-					<li>Thursday (Maundy Thursday): 8 AM - 5 PM (hours might differ)</li>
-					<li>Friday (Good Friday): 8 AM - 5 PM (hours might differ)</li>
-					<li>Saturday (Holy Saturday): Closed (hours might differ)</li>
+					<li>Status: Closed, opens 8 AM Monday</li>
 				</ul>
+				<p class="card-muted">Detailed weekly schedule is shown in the card below.</p>
+			</article>
+		</section>
+
+		<section class="contact-grid" aria-label="Office weekly operating hours" style="grid-template-columns: 1fr;">
+			<article class="contact-card">
+				<h2>Weekly Operating Hours</h2>
+				<div class="hours-grid">
+					<div class="hours-day">Sunday</div>
+					<div class="hours-time">Closed</div>
+
+					<div class="hours-day">Monday</div>
+					<div class="hours-time">8 AM - 5 PM</div>
+
+					<div class="hours-day">Tuesday</div>
+					<div class="hours-time">8 AM - 5 PM</div>
+
+					<div class="hours-day">Wednesday (Holy Wednesday)</div>
+					<div class="hours-time">8 AM - 5 PM (hours might differ)</div>
+
+					<div class="hours-day">Thursday (Maundy Thursday)</div>
+					<div class="hours-time">8 AM - 5 PM (hours might differ)</div>
+
+					<div class="hours-day">Friday (Good Friday)</div>
+					<div class="hours-time">8 AM - 5 PM (hours might differ)</div>
+
+					<div class="hours-day">Saturday (Holy Saturday)</div>
+					<div class="hours-time">Closed (hours might differ)</div>
+				</div>
 			</article>
 		</section>
 

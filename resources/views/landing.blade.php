@@ -39,20 +39,48 @@
 
         .brand {
             font-weight: 900;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
             color: #0b6d5a;
-            font-size: clamp(16px, 1.8vw, 28px);
             white-space: normal;
-            line-height: 1.35;
-            max-width: min(780px, 56vw);
+            line-height: 1.1;
+            max-width: min(820px, 52vw);
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
         }
 
-        .brand span {
-            display: inline-block;
+        .brand-text {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .brand-divider {
+            width: 5px;
+            height: 50px;
+            border-radius: 999px;
+            background: #f8b803;
+            flex-shrink: 0;
+        }
+
+        .brand-main {
+            font-size: clamp(24px, 2.4vw, 36px);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        .brand-sub {
+            font-size: clamp(13px, 1.2vw, 17px);
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            line-height: 1.15;
+            color: #2e6d61;
+            white-space: nowrap;
         }
 
         .brand-logo {
@@ -80,8 +108,9 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 14px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-link {
@@ -90,13 +119,14 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 999px;
             border: 1px solid transparent;
+            white-space: nowrap;
         }
 
         .nav-link svg {
@@ -412,6 +442,19 @@
             .insight-grid {
                 grid-template-columns: 1fr;
             }
+
+            .brand-main {
+                font-size: clamp(19px, 3.6vw, 28px);
+            }
+
+            .brand-sub {
+                font-size: clamp(11px, 2.2vw, 15px);
+                white-space: normal;
+            }
+
+            .brand-divider {
+                height: 40px;
+            }
         }
 
         .carousel-container {
@@ -641,7 +684,11 @@
     <header class="navbar">
         <div class="brand">
             <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
-            <span>ENVIROTRACK: Smart Mapping</span>
+            <span class="brand-text">
+                <span class="brand-main">ENVIROTRACK</span>
+                <span class="brand-divider" aria-hidden="true"></span>
+                <span class="brand-sub">Department of Environment<br>and Natural Resources</span>
+            </span>
         </div>
         <nav class="main-nav" aria-label="Main navigation">
             <a class="nav-link" href="#home">
