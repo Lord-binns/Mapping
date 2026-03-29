@@ -9,6 +9,7 @@ Route::get('/', function () {
 });
 
 Route::view('/about', 'about')->name('about');
+Route::view('/contact', 'contact')->name('contact');
 
 Route::middleware('guest')->group(function () {
     Route::view('/login', 'login')->name('login');
