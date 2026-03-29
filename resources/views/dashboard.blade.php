@@ -858,19 +858,13 @@
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 Home
                             </a>
-                            <button type="button" class="btn alt">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16" stroke-linecap="round"/><path d="M4 12h16" stroke-linecap="round"/><path d="M4 19h10" stroke-linecap="round"/></svg>
-                                Reports
-                            </button>
+                         
                             <button id="notification-btn" type="button" class="btn alt notification">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
                                 Notifications
                                 <span id="notification-dot" class="notification-dot" aria-hidden="true" hidden></span>
                             </button>
-                            <button type="button" class="btn">
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12" stroke-linecap="round"/><path d="M7 11l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h14" stroke-linecap="round"/></svg>
-                                Export
-                            </button>
+                         
                         </div>
                     </section>
 
