@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PinController extends Controller
 {
@@ -24,8 +25,8 @@ class PinController extends Controller
             $validated['image'] = '/storage/' . $path;
         }
 
-        if (auth()->check()) {
-            $validated['user_id'] = auth()->id();
+        if (Auth::check()) {
+            $validated['user_id'] = Auth::id();
         } else {
             $validated['user_id'] = null;
         }
