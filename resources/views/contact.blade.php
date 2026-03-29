@@ -418,11 +418,18 @@
 			</article>
 
 			<article class="contact-card">
-				<h2>Typical Response Time</h2>
+				<h2>Official Directory</h2>
+				<p>Department of Environment and Natural Resources - Region X</p>
+				<a class="contact-link" href="https://r10.denr.gov.ph/" target="_blank" rel="noopener noreferrer">https://r10.denr.gov.ph/</a>
 				<ul>
-					<li>Email: within 24 hours</li>
-					<li>Hotline: within 15 minutes</li>
-					<li>Report verification: 1 to 3 business days</li>
+					<li>Phone: 0888568780</li>
+					<li>Sunday: Closed</li>
+					<li>Monday: 8 AM - 5 PM</li>
+					<li>Tuesday: 8 AM - 5 PM</li>
+					<li>Wednesday (Holy Wednesday): 8 AM - 5 PM (hours might differ)</li>
+					<li>Thursday (Maundy Thursday): 8 AM - 5 PM (hours might differ)</li>
+					<li>Friday (Good Friday): 8 AM - 5 PM (hours might differ)</li>
+					<li>Saturday (Holy Saturday): Closed (hours might differ)</li>
 				</ul>
 			</article>
 		</section>
