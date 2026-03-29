@@ -40,20 +40,48 @@
 
 		.brand {
 			font-weight: 900;
-			letter-spacing: 0.04em;
-			text-transform: uppercase;
 			color: #0b6d5a;
-			font-size: clamp(16px, 1.8vw, 28px);
 			white-space: normal;
-			line-height: 1.35;
-			max-width: min(780px, 56vw);
+			line-height: 1.1;
+			max-width: min(820px, 52vw);
 			display: inline-flex;
 			align-items: center;
 			gap: 10px;
+			min-width: 0;
 		}
 
-		.brand span {
-			display: inline-block;
+		.brand-text {
+			display: inline-flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 10px;
+			min-width: 0;
+		}
+
+		.brand-divider {
+			width: 5px;
+			height: 50px;
+			border-radius: 999px;
+			background: #f8b803;
+			flex-shrink: 0;
+		}
+
+		.brand-main {
+			font-size: clamp(24px, 2.4vw, 36px);
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			white-space: nowrap;
+			line-height: 1;
+		}
+
+		.brand-sub {
+			font-size: clamp(13px, 1.2vw, 17px);
+			font-weight: 700;
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+			line-height: 1.15;
+			color: #2e6d61;
+			white-space: nowrap;
 		}
 
 		.brand-logo {
@@ -149,6 +177,31 @@
 			color: #4b4b4b;
 			max-width: 900px;
 			line-height: 1.6;
+		}
+
+		.agency-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 8px 12px;
+			border: 1px solid #dce5e1;
+			border-radius: 10px;
+			background: #f9fdfc;
+			margin-bottom: 14px;
+		}
+
+		.agency-badge img {
+			width: 38px;
+			height: 38px;
+			object-fit: contain;
+		}
+
+		.agency-badge span {
+			font-size: 12px;
+			letter-spacing: 0.03em;
+			text-transform: uppercase;
+			color: #355b54;
+			font-weight: 700;
 		}
 
 		.insight-grid {
@@ -252,6 +305,19 @@
 			.insight-grid {
 				grid-template-columns: 1fr;
 			}
+
+			.brand-main {
+				font-size: clamp(19px, 3.6vw, 28px);
+			}
+
+			.brand-sub {
+				font-size: clamp(11px, 2.2vw, 15px);
+				white-space: normal;
+			}
+
+			.brand-divider {
+				height: 40px;
+			}
 		}
 	</style>
 </head>
@@ -259,7 +325,11 @@
 	<header class="navbar">
 		<div class="brand">
 			<div class="brand-logo"><img src="https://img.freepik.com/premium-vector/environment-logo-vector_1277164-17389.jpg?w=360" alt="Logo"></div>
-			<span>ENVIROTRACK: Smart Mapping</span>
+			<span class="brand-text">
+				<span class="brand-main">ENVIROTRACK</span>
+				<span class="brand-divider" aria-hidden="true"></span>
+				<span class="brand-sub">Department of Environment<br>and Natural Resources</span>
+			</span>
 		</div>
 		<nav class="main-nav" aria-label="Main navigation">
 			<a class="nav-link" href="{{ url('/') }}#home">
@@ -290,6 +360,10 @@
 
 		<section class="new-section" aria-label="About ENVIROTRACK and DENR CDO">
 			<h2>About Us</h2>
+			<div class="agency-badge">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Seal_of_the_Department_of_Environment_and_Natural_Resources.svg" alt="DENR Seal">
+				<span>Department of Environment and Natural Resources</span>
+			</div>
 			<p>
 				ENVIROTRACK is an agile-based mapping system developed to support DENR CDO in real-time monitoring and response.
 				It transforms citizen submissions into geotagged, evidence-backed incident records that help identify and verify
@@ -299,11 +373,11 @@
 			<div class="insight-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
 				<article class="insight-card">
 					<h3>Mission</h3>
-					<p>Empower DENR CDO and local communities with reliable mapping data for faster, transparent, and coordinated environmental action.</p>
+					<p>To mobilize citizens in protecting, conserving, and managing the environment and natural resources for present and future generations.</p>
 				</article>
 				<article class="insight-card">
 					<h3>Vision</h3>
-					<p>Create a connected ecosystem where environmental data is visible, actionable, and drives timely interventions for a cleaner, safer Cagayan de Oro.</p>
+					<p>A nation enjoying and sustaining its natural resources and a clean, healthy environment.</p>
 				</article>
 			</div>
 		</section>
