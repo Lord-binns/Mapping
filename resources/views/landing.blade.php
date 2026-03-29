@@ -749,44 +749,44 @@
             <ul class="slider" id="carousel-slider">
                 <li class="item" style="background-image: url('https://i.pinimg.com/736x/6f/88/bc/6f88bc51f7005f59f998333655a803cd.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Environmental Incident Reports</h2>
-                        <p class="carousel-description">Map user-submitted incident pins with exact location, photo proof, report description, and status tracking from pending to verified and resolved.</p>
-                        <button>View Reports</button>
+                        <h2 class="carousel-title">Pin Location and Evidence</h2>
+                        <p class="carousel-description">Drop a draggable Pin Location marker, attach an optional note, and upload a photo so each report has clear map coordinates plus visual proof for validation.</p>
+                        <button>Tag Location</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/1200x/df/89/59/df89596c5813b20149c522d2d3c2f188.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Illegal Dumping Sites</h2>
-                        <p class="carousel-description">Track trash piles and open dumping areas reported by the community to support verification workflows and faster cleanup response planning.</p>
-                        <button>Open Layer</button>
+                        <h2 class="carousel-title">Dumping Site Reports</h2>
+                        <p class="carousel-description">Tag open dumping locations directly on the map so cleanup teams can identify repeated disposal points and prioritize field inspection and enforcement.</p>
+                        <button>Dumping Site</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/1200x/0f/fb/bf/0ffbbf4ab64ce4dac09beaddfdd01c4d.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Flood-Prone Areas</h2>
-                        <p class="carousel-description">Collect and visualize streets or zones that repeatedly flood during rain events so responders can identify high-risk corridors and vulnerable communities.</p>
-                        <button>Open Layer</button>
+                        <h2 class="carousel-title">High Risk and Blocked Drainage</h2>
+                        <p class="carousel-description">Mark danger points as High Risk or Blocked Drainage to highlight immediate hazards and recurring drainage failures that need urgent local response.</p>
+                        <button>Risk Tags</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/1200x/72/bd/7c/72bd7c0c8b7913e9da860c152a480268.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Water Condition Mapping</h2>
-                        <p class="carousel-description">Tag rivers, springs, and drainage points as clean or polluted using field reports and evidence photos to support environmental health monitoring.</p>
-                        <button>Open Layer</button>
+                        <h2 class="carousel-title">Contaminated Water Mapping</h2>
+                        <p class="carousel-description">Submit Contaminated Water pins for rivers, creeks, and drainage outlets to support water quality monitoring and guide follow-up checks by field officers.</p>
+                        <button>Water Reports</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/736x/55/01/92/550192bed01ffeb8805a77650941be82.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">Hotspot Heatmap Analysis</h2>
-                        <p class="carousel-description">Convert clustered reports into heatmap surfaces so dense incident zones become visible at a glance instead of isolated point markers.</p>
-                        <button>View Heatmap</button>
+                        <h2 class="carousel-title">Illegal Burning Incidents</h2>
+                        <p class="carousel-description">Capture Illegal Burning locations with timestamped map pins so responders can track recurring smoke sources and coordinate barangay-level intervention.</p>
+                        <button>Burning Alerts</button>
                     </div>
                 </li>
                 <li class="item" style="background-image: url('https://i.pinimg.com/736x/18/a4/59/18a4599cb9b39e9912d87ece87d8eb44.jpg')">
                     <div class="carousel-content">
-                        <h2 class="carousel-title">High-Risk Zone Clusters</h2>
-                        <p class="carousel-description">Highlight red zones for heavy dumping and blue zones for flood-prone clusters to reveal environmental patterns and prioritize interventions.</p>
-                        <button>View Risk Zones</button>
+                        <h2 class="carousel-title">City and Barangay Filtering</h2>
+                        <p class="carousel-description">Switch city and barangay views to focus reports by area, helping teams review local pin clusters, compare conditions, and plan targeted actions.</p>
+                        <button>Filter Areas</button>
                     </div>
                 </li>
             </ul>

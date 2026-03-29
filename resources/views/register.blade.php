@@ -177,7 +177,6 @@
 
             <div class="top-links">
                 <a href="{{ url('/') }}">Back Home</a>
-                <a href="{{ route('login') }}">Already have an account</a>
             </div>
         </fieldset>
     </form>

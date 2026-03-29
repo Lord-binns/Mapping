@@ -149,7 +149,7 @@
         @csrf
         <fieldset>
             <h2 class="fs-title">Login</h2>
-            <h3 class="fs-subtitle">Access your {{ config('app.name') }} dashboard</h3>
+            <h3 class="fs-subtitle">Sign in to continue to your reporting dashboard</h3>
             @if ($errors->any())
                 <p class="form-error">{{ $errors->first() }}</p>
             @endif
@@ -167,7 +167,6 @@
             <a class="action-button secondary" href="{{ route('register') }}">Create Account</a>
             <div class="top-links">
                 <a href="{{ url('/') }}">Back Home</a>
-                <a href="{{ route('register') }}">Register</a>
             </div>
         </fieldset>
     </form>
