@@ -83,6 +83,14 @@
     /* ── Table overrides ─────────────────────────── */
     .page-table td { vertical-align: middle; }
 
+    .report-row-clickable {
+        cursor: pointer;
+    }
+
+    .report-row-clickable:hover {
+        background: #f7fffc;
+    }
+
     .row-pending { background: #fffdf0; }
 
     /* ── Action buttons ──────────────────────────── */
@@ -166,9 +174,9 @@
         ✅ Verified
         <span class="tab-count">{{ $verified->count() }}</span>
     </button>
-    <button class="report-tab" data-tab="resolved">
+    <button class="report-tab" data-tab="rejected">
         🗄 Rejected
-        <span class="tab-count">{{ $resolved->count() }}</span>
+        <span class="tab-count">{{ $rejected->count() }}</span>
     </button>
 </div>
 
@@ -200,10 +208,11 @@
                     </thead>
                     <tbody>
                         @foreach($pending as $pin)
-                        <tr class="row-pending">
+                        <tr class="row-pending report-row-clickable" data-review-url="{{ route('admin.reports.review', $pin) }}" title="Open map review">
                             <td style="color:#aaa; font-size:12px;">{{ $pin->id }}</td>
                             <td>
                                 <strong style="color:#1b1b1b;">{{ $pin->name }}</strong>
+                                <br><a href="{{ route('admin.reports.review', $pin) }}" style="display:inline-flex; align-items:center; gap:4px; margin-top:6px; font-size:11px; font-weight:700; color:#0b6d5a; text-decoration:none;">🗺 Open map review</a>
                                 @if($pin->description)
                                     <br><span style="color:#7aada0; font-size:12px;">{{ Str::limit($pin->description, 55) }}</span>
                                 @endif
@@ -228,8 +237,9 @@
                                         @csrf @method('PATCH')
                                         <button type="submit" class="btn-approve">✔ Approve</button>
                                     </form>
-                                    <form action="{{ route('admin.pins.reject', $pin) }}" method="POST" onsubmit="return confirm('Reject this report?')">
+                                    <form action="{{ route('admin.pins.reject', $pin) }}" method="POST" class="js-reject-form" data-reject-name="{{ $pin->name }}" onsubmit="return confirmRejectWithOptionalComment(event)">
                                         @csrf @method('PATCH')
+                                        <input type="hidden" name="rejection_comment" value="">
                                         <button type="submit" class="btn-reject">✘ Reject</button>
                                     </form>
                                 </div>
@@ -270,9 +280,12 @@
                     </thead>
                     <tbody>
                         @foreach($verified as $pin)
-                        <tr>
+                        <tr class="report-row-clickable" data-review-url="{{ route('admin.reports.review', $pin) }}" title="Open map review">
                             <td style="color:#aaa; font-size:12px;">{{ $pin->id }}</td>
-                            <td><strong style="color:#1b1b1b;">{{ $pin->name }}</strong></td>
+                            <td>
+                                <strong style="color:#1b1b1b;">{{ $pin->name }}</strong>
+                                <br><a href="{{ route('admin.reports.review', $pin) }}" style="display:inline-flex; align-items:center; gap:4px; margin-top:6px; font-size:11px; font-weight:700; color:#0b6d5a; text-decoration:none;">🗺 Open map review</a>
+                            </td>
                             <td><span class="badge badge-type">{{ ucfirst($pin->type) }}</span></td>
                             <td style="font-size:12px; color:#55706a; white-space:nowrap;">
                                 {{ number_format($pin->latitude, 5) }}, {{ number_format($pin->longitude, 5) }}
@@ -288,17 +301,17 @@
     </div>
 </div>
 
-{{-- ── RESOLVED tab ── --}}
-<div class="tab-panel" id="panel-resolved">
+{{-- ── REJECTED tab ── --}}
+<div class="tab-panel" id="panel-rejected">
     <div class="panel" style="padding:0; overflow:hidden;">
         <div style="padding:12px 14px; border-bottom: 1px solid #e8f5f2;">
-            <h3 style="margin:0; font-size:13px;">🗄 Rejected / Resolved — hidden from the map</h3>
+            <h3 style="margin:0; font-size:13px;">🗄 Rejected — hidden from the map</h3>
         </div>
 
-        @if($resolved->isEmpty())
+        @if($rejected->isEmpty())
             <div class="empty-state">
                 <span class="empty-icon">📭</span>
-                No rejected or resolved reports.
+                No rejected reports.
             </div>
         @else
             <div style="overflow-x:auto;">
@@ -311,19 +324,26 @@
                             <th>Coordinates</th>
                             <th>Submitted By</th>
                             <th>Updated</th>
+                            <th>Rejection Comment</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($resolved as $pin)
-                        <tr style="opacity:.75;">
+                        @foreach($rejected as $pin)
+                        <tr class="report-row-clickable" data-review-url="{{ route('admin.reports.review', $pin) }}" title="Open map review" style="opacity:.75;">
                             <td style="color:#aaa; font-size:12px;">{{ $pin->id }}</td>
-                            <td><strong style="color:#1b1b1b;">{{ $pin->name }}</strong></td>
+                            <td>
+                                <strong style="color:#1b1b1b;">{{ $pin->name }}</strong>
+                                <br><a href="{{ route('admin.reports.review', $pin) }}" style="display:inline-flex; align-items:center; gap:4px; margin-top:6px; font-size:11px; font-weight:700; color:#0b6d5a; text-decoration:none;">🗺 Open map review</a>
+                            </td>
                             <td><span class="badge badge-type">{{ ucfirst($pin->type) }}</span></td>
                             <td style="font-size:12px; color:#55706a; white-space:nowrap;">
                                 {{ number_format($pin->latitude, 5) }}, {{ number_format($pin->longitude, 5) }}
                             </td>
                             <td style="font-size:13px;">{{ $pin->user->name ?? 'Anonymous' }}</td>
                             <td style="font-size:12px; color:#7aada0;">{{ $pin->updated_at->diffForHumans() }}</td>
+                            <td style="font-size:12px; color:#55706a;">
+                                {{ $pin->rejection_comment ?: 'No comment' }}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -342,6 +362,36 @@
             document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
         });
     });
+
+    document.querySelectorAll('.report-row-clickable').forEach(row => {
+        row.addEventListener('click', (event) => {
+            if (event.target.closest('a, button, form, input, select, textarea, label')) {
+                return;
+            }
+
+            const reviewUrl = row.dataset.reviewUrl;
+            if (reviewUrl) {
+                window.location.href = reviewUrl;
+            }
+        });
+    });
+
+    function confirmRejectWithOptionalComment(event) {
+        const form = event.currentTarget;
+        const reportName = form.dataset.rejectName || 'this report';
+        const confirmed = window.confirm(`Reject ${reportName}?`);
+        if (!confirmed) {
+            return false;
+        }
+
+        const comment = window.prompt('Optional rejection comment for this report (leave blank to skip):', '');
+        const hiddenComment = form.querySelector('input[name="rejection_comment"]');
+        if (hiddenComment) {
+            hiddenComment.value = comment ? comment.trim() : '';
+        }
+
+        return true;
+    }
 </script>
 
 @endsection

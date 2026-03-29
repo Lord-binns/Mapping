@@ -461,6 +461,10 @@
             background: #7d3f98;
         }
 
+        .tag-bio-hazard {
+            background: #8f1d2c;
+        }
+
         .tag-blocked-drainage {
             background: #355e3b;
         }
@@ -518,6 +522,90 @@
             border-radius: 50%;
             background: #ff3b30;
             box-shadow: 0 0 0 2px #ffffff;
+        }
+
+        .notification-dot[hidden] {
+            display: none;
+        }
+
+        .notification-panel {
+            margin: 10px auto 0;
+            width: min(980px, 100%);
+            background: #ffffff;
+            border: 1px solid #d9ebe6;
+            border-radius: 12px;
+            box-shadow: 0 10px 24px rgba(0, 121, 101, 0.1);
+            overflow: hidden;
+        }
+
+        .notification-panel[hidden] {
+            display: none;
+        }
+
+        .notification-panel-head {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2f1ed;
+            background: #f7fffc;
+            color: #0b6d5a;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #edf6f3;
+        }
+
+        .notification-item:last-child {
+            border-bottom: 0;
+        }
+
+        .notification-item-title {
+            margin: 0;
+            color: #1b1b1b;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .notification-item-meta {
+            margin: 4px 0 0;
+            color: #55706a;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .notification-item-status {
+            display: inline-block;
+            margin-right: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+        }
+
+        .notification-item-status.is-approved {
+            color: #0b6d5a;
+        }
+
+        .notification-item-status.is-declined {
+            color: #c0392b;
+        }
+
+        .notification-empty {
+            padding: 14px 12px;
+            color: #55706a;
+            font-size: 12px;
         }
 
         h1 {
@@ -690,6 +778,7 @@
                                 <option value="High Risk">High Risk</option>
                                 <option value="Dumping Site">Dumping Site</option>
                                 <option value="Contaminated Water">Contaminated Water</option>
+                                <option value="Bio-Hazard">Bio-Hazard</option>
                                 <option value="Illegal Burning">Illegal Burning</option>
                                 <option value="Blocked Drainage">Blocked Drainage</option>
                                 <option value="Other">Other</option>
@@ -1024,6 +1113,10 @@
                     className: 'tag-contaminated-water',
                     icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C9 8 6 10.5 6 14a6 6 0 0 0 12 0c0-3.5-3-6-6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 5 0"/></svg>',
                 },
+                'Bio-Hazard': {
+                    className: 'tag-bio-hazard',
+                    icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1.8"/><path d="M10.2 12a3.9 3.9 0 0 1 1.8-3.3"/><path d="M12 8.7a3.9 3.9 0 0 1 3.3 1.8"/><path d="M13.8 12a3.9 3.9 0 0 1-1.8 3.3"/><path d="M12 15.3a3.9 3.9 0 0 1-3.3-1.8"/><path d="M9 9.2 7.2 7.4"/><path d="M15 9.2l1.8-1.8"/><path d="M9 14.8l-1.8 1.8"/></svg>',
+                },
                 'Illegal Burning': {
                     className: 'tag-illegal-burning',
                     icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 3 1 4.5.2 6.1C11.4 10.8 11 12 12 13.7c.8-1.1 2.2-1.9 3.9-1.7 2.6.3 4.1 2.4 4.1 4.8A8 8 0 1 1 8.2 8.5C9.5 7 10.4 5.3 12 3z"/></svg>',
@@ -1124,6 +1217,7 @@
             'High Risk': 'hotspot',
             'Dumping Site': 'dumping',
             'Contaminated Water': 'water',
+            'Bio-Hazard': 'biohazard',
             'Illegal Burning': 'incident',
             'Blocked Drainage': 'flood',
             'Other': 'incident',

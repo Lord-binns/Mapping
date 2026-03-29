@@ -10,7 +10,7 @@ class PinController extends Controller
 {
     public function index()
     {
-        $pins = Pin::with('user')->orderByRaw("FIELD(status, 'pending', 'verified', 'resolved')")->paginate(15);
+        $pins = Pin::with('user')->orderByRaw("FIELD(status, 'pending', 'verified', 'rejected')")->paginate(15);
         return view('admin.pins', compact('pins'));
     }
 
@@ -18,8 +18,15 @@ class PinController extends Controller
     {
         $pending  = Pin::with('user')->where('status', 'pending')->latest()->get();
         $verified = Pin::with('user')->where('status', 'verified')->latest()->get();
-        $resolved = Pin::with('user')->where('status', 'resolved')->latest()->get();
-        return view('admin.reports', compact('pending', 'verified', 'resolved'));
+        $rejected = Pin::with('user')->where('status', 'rejected')->latest()->get();
+        return view('admin.reports', compact('pending', 'verified', 'rejected'));
+    }
+
+    public function review(Pin $pin)
+    {
+        $pin->load('user');
+
+        return view('admin.review', compact('pin'));
     }
 
     public function heatmap()
@@ -43,8 +50,9 @@ class PinController extends Controller
             'description' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'type' => 'required|in:incident,dumping,flood,water,hotspot',
-            'status' => 'required|in:pending,verified,resolved',
+            'type' => 'required|in:incident,dumping,flood,water,hotspot,biohazard',
+            'status' => 'required|in:pending,verified,rejected',
+            'rejection_comment' => 'nullable|string|max:1000',
             'image' => 'nullable|url',
         ]);
 
@@ -72,8 +80,9 @@ class PinController extends Controller
             'description' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'type' => 'required|in:incident,dumping,flood,water,hotspot',
-            'status' => 'required|in:pending,verified,resolved',
+            'type' => 'required|in:incident,dumping,flood,water,hotspot,biohazard',
+            'status' => 'required|in:pending,verified,rejected',
+            'rejection_comment' => 'nullable|string|max:1000',
             'image' => 'nullable|url',
         ]);
 
@@ -84,13 +93,24 @@ class PinController extends Controller
 
     public function verify(Pin $pin)
     {
-        $pin->update(['status' => 'verified']);
+        $pin->update([
+            'status' => 'verified',
+            'rejection_comment' => null,
+        ]);
         return redirect()->route('admin.reports')->with('success', 'Pin approved and is now visible on the map.');
     }
 
-    public function reject(Pin $pin)
+    public function reject(Request $request, Pin $pin)
     {
-        $pin->update(['status' => 'resolved']);
+        $validated = $request->validate([
+            'rejection_comment' => 'nullable|string|max:1000',
+        ]);
+
+        $pin->update([
+            'status' => 'rejected',
+            'rejection_comment' => $validated['rejection_comment'] ?? null,
+        ]);
+
         return redirect()->route('admin.reports')->with('success', 'Pin has been rejected.');
     }
 

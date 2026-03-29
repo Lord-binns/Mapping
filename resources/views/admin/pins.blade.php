@@ -8,7 +8,7 @@
 <style>
     .status-badge-pending  { background: #ffc107; color: #000; }
     .status-badge-verified { background: #198754; color: #fff; }
-    .status-badge-resolved { background: #6c757d; color: #fff; }
+    .status-badge-rejected { background: #6c757d; color: #fff; }
     .pending-row { background: #fff8e1; }
     .btn-approve { background: #198754; color: #fff; border: none; }
     .btn-approve:hover { background: #145c38; color: #fff; }
@@ -46,8 +46,8 @@
             <div class="col-md-4">
                 <div class="card text-center border-secondary">
                     <div class="card-body py-3">
-                        <h4 class="mb-0 text-secondary">{{ $pins->where('status','resolved')->count() }}</h4>
-                        <small class="text-muted">Rejected / Resolved</small>
+                        <h4 class="mb-0 text-secondary">{{ $pins->where('status','rejected')->count() }}</h4>
+                        <small class="text-muted">Rejected</small>
                     </div>
                 </div>
             </div>
@@ -100,8 +100,9 @@
                                                     @csrf @method('PATCH')
                                                     <button class="btn btn-sm btn-approve" title="Approve — will show on map">✔ Approve</button>
                                                 </form>
-                                                <form action="{{ route('admin.pins.reject', $pin) }}" method="POST" onsubmit="return confirm('Reject this pin?')">
+                                                <form action="{{ route('admin.pins.reject', $pin) }}" method="POST" class="js-reject-form" data-reject-name="{{ $pin->name }}" onsubmit="return submitRejectWithOptionalComment(event)">
                                                     @csrf @method('PATCH')
+                                                    <input type="hidden" name="rejection_comment" value="">
                                                     <button class="btn btn-sm btn-reject" title="Reject — will not show on map">✘ Reject</button>
                                                 </form>
                                             @endif
@@ -131,4 +132,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    function submitRejectWithOptionalComment(event) {
+        const form = event.currentTarget;
+        const reportName = form.dataset.rejectName || 'this pin';
+        const confirmed = window.confirm(`Reject ${reportName}?`);
+        if (!confirmed) {
+            return false;
+        }
+
+        const comment = window.prompt('Optional rejection comment (leave blank to skip):', '');
+        const hiddenComment = form.querySelector('input[name="rejection_comment"]');
+        if (hiddenComment) {
+            hiddenComment.value = comment ? comment.trim() : '';
+        }
+
+        return true;
+    }
+</script>
 @endsection

@@ -365,31 +365,50 @@
 				<span>Department of Environment and Natural Resources</span>
 			</div>
 			<p>
-				ENVIROTRACK is an agile-based mapping system developed to support DENR CDO in real-time monitoring and response.
-				It transforms citizen submissions into geotagged, evidence-backed incident records that help identify and verify
-				pollution reports, illegal dumping, water contamination, and other environmental violations.
+				ENVIROTRACK supports the Department of Environment and Natural Resources (DENR) in advancing its mandate for
+				environmental protection, conservation, and sustainable development through better community engagement and action.
 			</p>
 
 			<div class="insight-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
 				<article class="insight-card">
-					<h3>Mission</h3>
-					<p>To mobilize citizens in protecting, conserving, and managing the environment and natural resources for present and future generations.</p>
+					<h3>Vision</h3>
+					<p>A nation enjoying and sustaining its natural resources and a clean and healthy environment.</p>
 				</article>
 				<article class="insight-card">
-					<h3>Vision</h3>
-					<p>A nation enjoying and sustaining its natural resources and a clean, healthy environment.</p>
+					<h3>Mission</h3>
+					<p>To mobilize our citizenry in protecting, conserving, and managing the environment and natural resources for the present and future generations.</p>
 				</article>
 			</div>
 		</section>
 
-		<section class="section-lite" aria-label="What ENVIROTRACK supports">
-			<h2>What ENVIROTRACK Supports</h2>
+		<section class="section-lite" aria-label="Development goal and organizational outcomes">
+			<h2>Development Goal</h2>
+			<p>Human well-being, and environmental quality and sustainability ensured.</p>
+
+			<h2>Organizational Outcomes</h2>
 			<ul>
-				<li>Real-time pinning of pollution incidents and environmental violations</li>
-				<li>Photo-backed submissions for stronger verification and documentation</li>
-				<li>Status tracking from pending to verified and resolved reports</li>
-				<li>Map layers and heatmaps for identifying high-risk and recurring areas</li>
-				<li>Data-informed planning for cleanup drives, inspections, and community action</li>
+				<li>Promote human well-being and ensure environmental quality</li>
+				<li>Sustainably-managed environment and natural resources</li>
+				<li>Adaptive capacities of human communities and natural systems ensured</li>
+			</ul>
+		</section>
+
+		<section class="section-lite" aria-label="ENR development principles">
+			<h2>ENR Development Principles</h2>
+			<ul>
+				<li>Good governance</li>
+				<li>Accountability, transparency, integrity, participatory and predictability</li>
+				<li>Ease of doing business</li>
+				<li>Social justice</li>
+				<li>Equity and gross national happiness</li>
+				<li>Social entrepreneurship</li>
+				<li>Partnership with civil society</li>
+				<li>Ecosystem integrity</li>
+				<li>Sustainable consumption and production</li>
+				<li>Polluters pay</li>
+				<li>Payment for ecosystem services</li>
+				<li>Rule of law</li>
+				<li>Honoring global commitments</li>
 			</ul>
 		</section>
 	</main>

@@ -19,6 +19,7 @@ class Pin extends Model
         'type',
         'barangay',
         'status',
+        'rejection_comment',
         'image',
         'is_public',
     ];

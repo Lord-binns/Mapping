@@ -36,6 +36,7 @@ Route::get('/dashboard', function () {
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
     Route::get('/reports', [\App\Http\Controllers\Admin\PinController::class, 'reports'])->name('reports');
+    Route::get('/reports/{pin}/review', [\App\Http\Controllers\Admin\PinController::class, 'review'])->name('reports.review');
     Route::get('/heatmap', [\App\Http\Controllers\Admin\PinController::class, 'heatmap'])->name('heatmap');
     Route::view('/hotspots', 'admin.hotspots')->name('hotspots');
     Route::view('/users', 'admin.users')->name('users');
@@ -51,5 +52,18 @@ Route::get('/api/pins', function () {
 Route::get('/api/pins/pending', function () {
     return response()->json(\App\Models\Pin::where('status', 'pending')->with('user:id,name')->latest()->get());
 });
+
+Route::get('/api/my-pin-notifications', function () {
+    $user = auth()->user();
+
+    $notifications = \App\Models\Pin::query()
+        ->where('user_id', $user->id)
+        ->whereIn('status', ['verified', 'rejected'])
+        ->latest('updated_at')
+        ->limit(25)
+        ->get(['id', 'name', 'status', 'rejection_comment', 'updated_at']);
+
+    return response()->json($notifications);
+})->middleware('auth');
 
 Route::post('/pins', [\App\Http\Controllers\PinController::class, 'store'])->name('pins.store');
