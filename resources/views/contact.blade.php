@@ -362,7 +362,7 @@
 <body>
 	<header class="navbar">
 		<div class="brand">
-			<div class="brand-logo"><img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwepdPH0a06dQd322E7KRfJZRGgDeBNF7JRK6QYOMAEw3b0Bzzb1LGB6rNykPnsCHVhhZ3s7tW0AKhQB8pAXItt7Jw6EHbfAMr-7xXZTdYtcWp0FzEB9tK27iT8v7BrBbqy6bkU1uaw=s1360-w1360-h1020-rw" alt="Logo"></div>
+			<div class="brand-logo"><img src="https://img.freepik.com/premium-vector/environment-logo-vector_1277164-17389.jpg?w=360" alt="Logo"></div>
 			<span>ENVIROTRACK: Smart Mapping</span>
 		</div>
 		<nav class="main-nav" aria-label="Main navigation">

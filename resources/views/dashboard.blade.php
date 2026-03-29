@@ -644,7 +644,7 @@
 <body>
     <header class="navbar">
         <div class="brand">
-            <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
+            <div class="brand-logo"><img src="https://img.freepik.com/premium-vector/environment-logo-vector_1277164-17389.jpg?w=360" alt="Logo"></div>
             <span>{{ config('app.name') }}</span>
         </div>
         <span class="topbar-note">Dashboard</span>

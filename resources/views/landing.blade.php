@@ -683,7 +683,7 @@
 <body data-page="globe-map">
     <header class="navbar">
         <div class="brand">
-            <div class="brand-logo"><img src="https://via.placeholder.com/40" alt="Logo"></div>
+            <div class="brand-logo"><img src="https://img.freepik.com/premium-vector/environment-logo-vector_1277164-17389.jpg?w=360" alt="Logo"></div>
             <span class="brand-text">
                 <span class="brand-main">ENVIROTRACK</span>
                 <span class="brand-divider" aria-hidden="true"></span>
@@ -796,15 +796,7 @@
             </nav>
         </div>
 
-        <section class="section-lite" id="contact" aria-label="Contact">
-            <h2>Contact</h2>
-            <p>
-                For official coordination and incident verification workflows, please connect with DENR CDO and your barangay environment offices.
-                ENVIROTRACK is designed to support agency-community collaboration for cleaner and safer local environments.
-            </p>
-        </section>
 
-        
     </main>
 
     <footer class="footer">ENVIROTRACK: AN AGILE-BASED MAPPING SYSTEM FOR REAL-TIME REPORTING OF POLLUTION AND ENVIRONMENTAL VIOLATIONS</footer>
